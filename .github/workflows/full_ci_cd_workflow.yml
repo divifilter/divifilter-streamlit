@@ -90,4 +90,3 @@ jobs:
           service-id: ${{ secrets.SERVICE_ID }}
           image-path: naorlivne/${{ github.event.repository.name }}:v${{ github.run_number }}
           credentials-id: ${{ secrets.CREDENTIALS_ID }}
-
