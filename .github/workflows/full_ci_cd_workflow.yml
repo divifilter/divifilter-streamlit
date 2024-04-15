@@ -2,7 +2,7 @@ name: push CI CD
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "master", "main" ]
 
 jobs:
 
