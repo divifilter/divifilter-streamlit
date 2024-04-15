@@ -50,6 +50,7 @@ def min_max_value_of_any_stock_key(radar_dict: dict, key: str, min_or_max: str) 
         raise ValueError
     return float(min_max_key_value)
 
+
 def get_current_datetime_string():
     now = datetime.now()
     date_time = now.strftime("%Y-%m-%d %H:%M:%S")
