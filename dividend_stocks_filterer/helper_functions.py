@@ -1,5 +1,5 @@
 import pandas as pd
-import datetime
+from datetime import datetime
 
 
 def radar_dict_to_table(radar_dict: dict) -> pd.DataFrame:
