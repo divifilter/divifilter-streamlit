@@ -16,9 +16,9 @@ def read_configurations(config_folder: str = "config") -> dict:
 
     config = {}
     parser = ParseIt(config_location=config_folder, recurse=True)
-    config["dividend_radar_download_url"] = \
-        parser.read_configuration_variable("dividend_radar_download_url",
-                                           default_value="https://www.portfolio-insight.com/dividend-radar")
-    config["local_file_path"] = parser.read_configuration_variable("local_file_path",
-                                                                   default_value="/tmp/latest_dividend_radar.xlsx")
+    config["db_host"] = parser.read_configuration_variable("db_host")
+    config["db_port"] = parser.read_configuration_variable("db_port", default_value=3306)
+    config["db_user"] = parser.read_configuration_variable("db_user", default_value="root")
+    config["db_pass"] = parser.read_configuration_variable("db_pass")
+    config["db_pass"] = parser.read_configuration_variable("db_schema", default_value="defaultdb")
     return config
