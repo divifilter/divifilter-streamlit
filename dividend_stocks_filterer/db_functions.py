@@ -152,3 +152,32 @@ class MysqlConnection:
         column_name_with_backticks = f"`{column_name}`"
         self.run_sql_query(f'ALTER TABLE {table_name} ADD COLUMN {column_name_with_backticks} VARCHAR(255);')
 
+
+
+
+
+
+SELECT *
+FROM your_table_name
+WHERE
+    `No Years` >= selected_min_streak_years
+    AND `Div Yield` BETWEEN selected_yield_range_min AND selected_yield_range_max
+    AND `5Y Avg Yield` BETWEEN selected_yield_range_min AND selected_yield_range_max
+    AND `DGR 1Y` >= selected_min_dgr
+    AND `DGR 3Y` >= selected_min_dgr
+    AND `DGR 5Y` >= selected_min_dgr
+    AND `DGR 10Y` >= selected_min_dgr
+    AND `Chowder Number` >= selected_chowder_number
+    AND `Price` BETWEEN selected_price_range_min AND selected_price_range_max
+    AND `FV %` <= selected_fair_value
+    AND `EPS 1Y` >= selected_min_eps
+    AND `Revenue 1Y` >= selected_min_revenue
+    AND `NPM` >= selected_min_npm
+    AND `CF/Share` >= selected_min_cf_per_share
+    AND `ROE` >= selected_min_roe
+    AND `P/E` BETWEEN selected_pe_range_min AND selected_pe_range_max
+    AND `P/BV` <= selected_max_price_per_book_value
+    AND `Debt/Capital` <= selected_max_debt_per_capital_value
+    AND `Symbol` NOT IN (selected_excluded_symbols)
+    AND `Sector` NOT IN (selected_excluded_sectors)
+    AND `Industry` NOT IN (selected_excluded_industries);
