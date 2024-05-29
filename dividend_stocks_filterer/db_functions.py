@@ -5,15 +5,43 @@ from typing import List
 class MysqlConnection:
 
     def __init__(self, db_host: str, db_port: int, db_user: str, db_password: str, db_schema: str):
+        """
+            Initializes a new instance of the MysqlConnection class.
+
+            Args:
+                db_host (str): The hostname of the MySQL server.
+                db_port (int): The port number of the MySQL server.
+                db_user (str): The username for connecting to the MySQL server.
+                db_password (str): The password for connecting to the MySQL server.
+                db_schema (str): The name of the MySQL schema (database).
+
+            Returns:
+                None
+            """
         self.conn = pymysql.connect(host=db_host, port=db_port, user=db_user, passwd=db_password, db=db_schema)
 
     def run_sql_query(self, sql_query):
+        """
+        Executes a SQL query on the database.
+
+        Args:
+            sql_query (str): The SQL query to execute.
+
+        Returns:
+            list: A list of tuples containing the query response.
+        """
         cur = self.conn.cursor()
         cur.execute(sql_query)
         query_response = cur.fetchall()
         return query_response
 
     def check_db_update_dates(self):
+        """
+            Checks the database for update dates.
+
+            Returns:
+                dict: A dictionary containing the query response.
+            """
         db_update_query = "SELECT * FROM dividend_update_times"
         return dict(self.run_sql_query(db_update_query))
 
@@ -41,6 +69,34 @@ class MysqlConnection:
                          min_roe: float, pe_range_min: float, pe_range_max: float, max_price_per_book_value: float,
                          max_debt_per_capital_value: float, excluded_symbols: List[str], excluded_sectors: List[str],
                          excluded_industries: List[str]) -> dict:
+        """
+        Run a filter query on the database to fetch records based on specified criteria.
+
+        Args:
+            min_streak_years (int): Minimum number of streak years.
+            yield_range_min (float): Minimum dividend yield range.
+            yield_range_max (float): Maximum dividend yield range.
+            min_dgr (float): Minimum Dividend Growth Rate (DGR).
+            chowder_number (float): Chowder Number threshold.
+            price_range_min (float): Minimum price range.
+            price_range_max (float): Maximum price range.
+            fair_value (float): Fair value threshold.
+            min_eps (float): Minimum Earnings Per Share (EPS).
+            min_revenue (float): Minimum revenue.
+            min_npm (float): Minimum Net Profit Margin (NPM).
+            min_cf_per_share (float): Minimum Cash Flow Per Share.
+            min_roe (float): Minimum Return on Equity (ROE).
+            pe_range_min (float): Minimum Price to Earnings (P/E) ratio range.
+            pe_range_max (float): Maximum Price to Earnings (P/E) ratio range.
+            max_price_per_book_value (float): Maximum Price to Book (P/BV) value.
+            max_debt_per_capital_value (float): Maximum Debt to Capital value.
+            excluded_symbols (List[str]): List of symbols to be excluded.
+            excluded_sectors (List[str]): List of sectors to be excluded.
+            excluded_industries (List[str]): List of industries to be excluded.
+
+        Returns:
+            dict: Dictionary containing the query response.
+        """
         filter_query = """
             SELECT *
             FROM your_table_name
