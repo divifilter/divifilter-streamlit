@@ -19,18 +19,26 @@ class MysqlConnection:
                 None
             """
         self.conn = pymysql.connect(host=db_host, port=db_port, user=db_user, passwd=db_password, db=db_schema)
+        self.dict_conn = pymysql.connect(host=db_host, port=db_port, user=db_user, passwd=db_password, db=db_schema,
+                                         cursorclass=pymysql.cursors.DictCursor)
 
-    def run_sql_query(self, sql_query:str) -> list:
+    def run_sql_query(self, sql_query:str, tuple_or_dict:str = "tuple") -> list:
         """
         Executes a SQL query on the database.
 
         Args:
             sql_query (str): The SQL query to execute.
+            tuple_or_dict: a string of either "tuple" or "dict" to tell what format you want the response returned at.
 
         Returns:
             list: A list of tuples containing the query response.
         """
-        cur = self.conn.cursor()
+        if tuple_or_dict == "tuple":
+            cur = self.conn.cursor()
+        elif tuple_or_dict == "dict":
+            cur = self.dict_conn.cursor()
+        else:
+            raise ValueError
         cur.execute(sql_query)
         query_response = cur.fetchall()
         return query_response
@@ -125,7 +133,7 @@ class MysqlConnection:
         """
         filter_query = """
             SELECT *
-            FROM your_table_name
+            FROM dividend_data_table
             WHERE 
                 `No Years` >= {}
                 AND `Div Yield` BETWEEN {} AND {}
@@ -145,12 +153,31 @@ class MysqlConnection:
                 AND `P/E` BETWEEN {} AND {}
                 AND `P/BV` <= {}
                 AND `Debt/Capital` <= {}
-                AND `Symbol` NOT IN {}
-                AND `Sector` NOT IN {}
-                AND `Industry` NOT IN {}
         """.format(min_streak_years, yield_range_min, yield_range_max, yield_range_min, yield_range_max,
                    min_dgr, min_dgr, min_dgr, min_dgr, chowder_number, price_range_min, price_range_max,
                    fair_value, min_eps, min_revenue, min_npm, min_cf_per_share, min_roe,
-                   pe_range_min, pe_range_max, max_price_per_book_value, max_debt_per_capital_value,
-                   tuple(excluded_symbols), tuple(excluded_sectors), tuple(excluded_industries))
-        return dict(self.run_sql_query(filter_query))
+                   pe_range_min, pe_range_max, max_price_per_book_value, max_debt_per_capital_value)
+
+        # Add NOT IN clauses only if the exclusion lists are not empty
+        if excluded_symbols:
+            filter_query += "AND `Symbol` NOT IN {} ".format(tuple(excluded_symbols))
+        if excluded_sectors:
+            filter_query += "AND `Sector` NOT IN {} ".format(tuple(excluded_sectors))
+        if excluded_industries:
+            filter_query += "AND `Industry` NOT IN {} ".format(tuple(excluded_industries))
+
+        # Add semicolon to the end of the query
+        filter_query += ";"
+
+        # Execute the SQL query
+        results = self.run_sql_query(filter_query, "dict")
+
+        # Convert results into the desired dictionary format
+        output_dict = {}
+        for row in results:
+            # Extract symbol from the row
+            symbol = row['Symbol']
+            # Update output dictionary
+            output_dict[symbol] = row
+
+        return output_dict

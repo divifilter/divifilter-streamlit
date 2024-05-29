@@ -226,7 +226,14 @@ with st.sidebar:
 
 st.divider()
 
-st.dataframe(radar_dict_to_table(radar_dict_filtered), use_container_width=True)
+st.dataframe(radar_dict_to_table(mysql_connection.run_filter_query(min_streak_years, yield_range_min, yield_range_max,
+                                                                   min_dgr, chowder_number, price_range_min,
+                                                                   price_range_max, fair_value, min_eps, min_revenue,
+                                                                   min_npm, min_cf_per_share,min_roe, pe_range_min,
+                                                                   pe_range_max, max_price_per_book_value,
+                                                                   max_debt_per_capital_value, excluded_symbols,
+                                                                   excluded_sectors, excluded_industries)),
+             use_container_width=True)
 
 st.info("""
 The information provided by Divifilter is for informational purposes only and should not be considered as financial 
