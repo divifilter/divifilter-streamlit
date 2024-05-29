@@ -19,8 +19,14 @@ footer {visibility: hidden;}
 """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
+mysql_connection = MysqlConnection(db_host=configuration["db_host"], db_schema=configuration["db_schema"],
+                                   db_password=configuration["db_pass"], db_port=configuration["db_port"],
+                                   db_user=configuration["db_user"])
+db_update_dates = mysql_connection.check_db_update_dates()
+
 st.title('Divifilter')
-st.text("dividend file update date: " + radarfileupdatedate + ", yahoo finance update time: " + yahoofinanceupdatetime)
+st.text("dividend file update date: " + db_update_dates["radar_file"] + ", yahoo finance update time: " +
+        db_update_dates["yahoo_finance"])
 
 with st.sidebar:
 

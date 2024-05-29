@@ -1,4 +1,5 @@
 import pymysql
+from typing import List
 
 
 class MysqlConnection:
@@ -13,10 +14,8 @@ class MysqlConnection:
         return query_response
 
     def check_db_update_dates(self):
-        if not self.engine.dialect.has_table(self.conn, "dividend_update_times"):
-            self.dividend_update_times.create(self.conn)
-        data_dict = dict(self.conn.execute(select(self.dividend_update_times)).fetchall())
-        return data_dict
+        db_update_query = "SELECT * FROM dividend_update_times"
+        return dict(self.run_sql_query(db_update_query))
 
     def get_tickers_from_db(self):
         """
@@ -36,40 +35,40 @@ class MysqlConnection:
 
         return tickers
 
-
-
-
-
-
-query = """
-    SELECT *
-    FROM your_table_name
-    WHERE 
-        `No Years` >= {}
-        AND `Div Yield` BETWEEN {} AND {}
-        AND `5Y Avg Yield` BETWEEN {} AND {}
-        AND `DGR 1Y` >= {}
-        AND `DGR 3Y` >= {}
-        AND `DGR 5Y` >= {}
-        AND `DGR 10Y` >= {}
-        AND `Chowder Number` >= {}
-        AND `Price` BETWEEN {} AND {}
-        AND `FV %` <= {}
-        AND `EPS 1Y` >= {}
-        AND `Revenue 1Y` >= {}
-        AND `NPM` >= {}
-        AND `CF/Share` >= {}
-        AND `ROE` >= {}
-        AND `P/E` BETWEEN {} AND {}
-        AND `P/BV` <= {}
-        AND `Debt/Capital` <= {}
-        AND `Symbol` NOT IN {}
-        AND `Sector` NOT IN {}
-        AND `Industry` NOT IN {}
-""".format(min_streak_years, yield_range_min, yield_range_max, yield_range_min, yield_range_max,
-           min_dgr, min_dgr, min_dgr, min_dgr, chowder_number, price_range_min, price_range_max,
-           fair_value, min_eps, min_revenue, min_npm, min_cf_per_share, min_roe,
-           pe_range_min, pe_range_max, max_price_per_book_value, max_debt_per_capital_value,
-           excluded_symbols, excluded_sectors, excluded_industries)
-
-
+    def run_filter_query(self, min_streak_years: int, yield_range_min: float, yield_range_max: float,
+                         min_dgr: float, chowder_number: float, price_range_min: float, price_range_max: float,
+                         fair_value: float, min_eps: float, min_revenue: float, min_npm: float, min_cf_per_share: float,
+                         min_roe: float, pe_range_min: float, pe_range_max: float, max_price_per_book_value: float,
+                         max_debt_per_capital_value: float, excluded_symbols: List[str], excluded_sectors: List[str],
+                         excluded_industries: List[str]) -> dict:
+        filter_query = """
+            SELECT *
+            FROM your_table_name
+            WHERE 
+                `No Years` >= {}
+                AND `Div Yield` BETWEEN {} AND {}
+                AND `5Y Avg Yield` BETWEEN {} AND {}
+                AND `DGR 1Y` >= {}
+                AND `DGR 3Y` >= {}
+                AND `DGR 5Y` >= {}
+                AND `DGR 10Y` >= {}
+                AND `Chowder Number` >= {}
+                AND `Price` BETWEEN {} AND {}
+                AND `FV %` <= {}
+                AND `EPS 1Y` >= {}
+                AND `Revenue 1Y` >= {}
+                AND `NPM` >= {}
+                AND `CF/Share` >= {}
+                AND `ROE` >= {}
+                AND `P/E` BETWEEN {} AND {}
+                AND `P/BV` <= {}
+                AND `Debt/Capital` <= {}
+                AND `Symbol` NOT IN {}
+                AND `Sector` NOT IN {}
+                AND `Industry` NOT IN {}
+        """.format(min_streak_years, yield_range_min, yield_range_max, yield_range_min, yield_range_max,
+                   min_dgr, min_dgr, min_dgr, min_dgr, chowder_number, price_range_min, price_range_max,
+                   fair_value, min_eps, min_revenue, min_npm, min_cf_per_share, min_roe,
+                   pe_range_min, pe_range_max, max_price_per_book_value, max_debt_per_capital_value,
+                   tuple(excluded_symbols), tuple(excluded_sectors), tuple(excluded_industries))
+        return dict(self.run_sql_query(filter_query))
