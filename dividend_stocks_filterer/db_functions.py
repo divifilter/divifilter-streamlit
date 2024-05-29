@@ -1,5 +1,5 @@
 import pymysql
-from typing import List
+from typing import List, Union
 
 
 class MysqlConnection:
@@ -20,7 +20,7 @@ class MysqlConnection:
             """
         self.conn = pymysql.connect(host=db_host, port=db_port, user=db_user, passwd=db_password, db=db_schema)
 
-    def run_sql_query(self, sql_query):
+    def run_sql_query(self, sql_query:str) -> list:
         """
         Executes a SQL query on the database.
 
@@ -35,7 +35,7 @@ class MysqlConnection:
         query_response = cur.fetchall()
         return query_response
 
-    def check_db_update_dates(self):
+    def check_db_update_dates(self) -> dict:
         """
             Checks the database for update dates.
 
@@ -45,15 +45,41 @@ class MysqlConnection:
         db_update_query = "SELECT * FROM dividend_update_times"
         return dict(self.run_sql_query(db_update_query))
 
-    def get_tickers_from_db(self):
+    def min_max_value_of_any_stock_key(self, key_of_stock_name: str, min_or_max: str) -> float:
+        """
+        Takes a dict of the radar file and returns the highest/lowest price of any stock in it, ignores None values
+
+        :param key_of_stock_name: The key of the stock to return the max/min value of
+        :param min_or_max: if to return min or max
+
+        :return min_max_key_value: the highest/lowest value of any stock in the dict key
+
+        :raise ValueError: if min_or_max isn't min or max which are it's only allowed values
+        """
+        if min_or_max == "max":
+            query = "SELECT MAX(\"{}\") FROM dividend_data_table WHERE \"Div Yield\" IS NOT NULL;".format(key_of_stock_name)
+        elif min_or_max == "min":
+            query = "SELECT MIN(\"{}\") FROM dividend_data_table WHERE \"Div Yield\" IS NOT NULL;".format(key_of_stock_name)
+        else:
+            raise ValueError
+
+        # Execute the query and fetch the results
+        result = self.run_sql_query(query)[0][0]
+
+        return result
+
+    def list_values_of_key_in_db(self, key_to_list: str) -> list:
         """
         Retrieve a list of tickers from the 'dividend_data_table' in the database.
+
+        Args:
+            key_to_list (str): The key you want to return a list of values of..
 
         Returns:
             list: List of tickers.
         """
         # Create a SQL query to select all distinct tickers from the table
-        query = "SELECT DISTINCT Symbol FROM dividend_data_table;"
+        query = "SELECT DISTINCT  " + key_to_list + " FROM dividend_data_table;"
 
         # Execute the query and fetch the results
         result = self.run_sql_query(query)
