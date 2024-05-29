@@ -160,11 +160,14 @@ class MysqlConnection:
 
         # Add NOT IN clauses only if the exclusion lists are not empty
         if excluded_symbols:
-            filter_query += "AND `Symbol` NOT IN {} ".format(tuple(excluded_symbols))
+            filter_query += "AND `Symbol` NOT IN ({}) ".format(
+                ', '.join(["'{}'".format(symbol) for symbol in excluded_symbols]))
         if excluded_sectors:
-            filter_query += "AND `Sector` NOT IN {} ".format(tuple(excluded_sectors))
+            filter_query += "AND `Sector` NOT IN ({}) ".format(
+                ', '.join(["'{}'".format(sector) for sector in excluded_sectors]))
         if excluded_industries:
-            filter_query += "AND `Industry` NOT IN {} ".format(tuple(excluded_industries))
+            filter_query += "AND `Industry` NOT IN ({}) ".format(
+                ', '.join(["'{}'".format(industry) for industry in excluded_industries]))
 
         # Add semicolon to the end of the query
         filter_query += ";"
