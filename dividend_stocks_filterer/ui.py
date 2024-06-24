@@ -207,11 +207,6 @@ with st.sidebar:
                                           options=mysql_connection.list_values_of_key_in_db("Industry"),
                                           help="exclude whole industries from your search")
 
-# TODO - move to centralized db that is updated via cron
-
-# TODO - add line of when was the last data pull from finviz (datetime is created when function runs, just
-# need to print it on the ui remains
-
 # TODO - unit tests all full coverage and readme badge
 
 # TODO - real DNS domain - current test domain is https://divifilter.naor.eu.org/
