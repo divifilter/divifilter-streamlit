@@ -221,8 +221,10 @@ with st.sidebar:
 # TODO - github link to website
 
 # TODO - publicize & monetize somehow?
+# TODO - https://www.comparepriceacross.com/post/integrate_google_adsense_in_streamlit_apps/
 
 # TODO - some user analytics - google analytics in streamlit is too hacky right now
+# TODO - https://elc.github.io/posts/streamlit-google-analytics/#github-pages
 
 st.divider()
 
