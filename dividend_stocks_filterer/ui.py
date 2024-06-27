@@ -26,7 +26,7 @@ db_update_dates = mysql_connection.check_db_update_dates()
 
 st.title('Divifilter')
 st.text("dividend file update date: " + db_update_dates["radar_file"] + ", yahoo finance update time: " +
-        db_update_dates["yahoo_finance"]) + " UTC"
+        db_update_dates["yahoo_finance"] + " UTC")
 
 with st.sidebar:
 
