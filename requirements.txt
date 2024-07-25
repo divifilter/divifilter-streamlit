@@ -35,7 +35,7 @@ PyYAML==6.0.2rc1
 referencing==0.35.1
 requests==2.32.3
 rich==13.7.1
-rpds-py==0.18.1
+rpds-py==0.19.1
 six==1.16.0
 smmap==5.0.1
 streamlit==1.36.0
