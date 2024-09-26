@@ -22,7 +22,7 @@ packaging==24.1
 pandas==2.2.2
 parse_it==2024.6.27.7.40
 pillow==10.4.0
-protobuf==5.27.2
+protobuf==5.28.2
 pyarrow==17.0.0
 pydeck==0.9.1
 Pygments==2.18.0
