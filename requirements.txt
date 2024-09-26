@@ -23,7 +23,7 @@ pandas==2.2.2
 parse_it==2024.6.27.7.40
 pillow==10.4.0
 protobuf==5.27.2
-pyarrow==16.1.0
+pyarrow==17.0.0
 pydeck==0.9.1
 Pygments==2.18.0
 pyhcl==0.4.5
