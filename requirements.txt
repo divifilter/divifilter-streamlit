@@ -31,7 +31,7 @@ PyMySQL==1.1.1
 python-dateutil==2.9.0.post0
 python-dotenv==1.0.1
 pytz==2024.1
-PyYAML==6.0.2rc1
+PyYAML==6.0.2
 referencing==0.35.1
 requests==2.32.3
 rich==13.8.1
