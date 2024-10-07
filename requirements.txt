@@ -41,7 +41,7 @@ smmap==5.0.1
 streamlit==1.38.0
 tenacity==8.4.2
 toml==0.10.2
-toolz==0.12.1
+toolz==1.0.0
 tornado==6.4.1
 typing_extensions==4.12.2
 tzdata==2024.2
