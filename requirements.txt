@@ -47,4 +47,4 @@ typing_extensions==4.12.2
 tzdata==2024.2
 urllib3==2.2.3
 watchdog==4.0.1
-xmltodict==0.13.0
+xmltodict==0.14.0
