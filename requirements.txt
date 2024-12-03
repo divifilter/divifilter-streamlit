@@ -20,7 +20,7 @@ mdurl==0.1.2
 numpy==2.1.3
 packaging==24.2
 pandas==2.2.3
-parse_it==2024.11.18.10.11
+parse_it==2024.11.20.9.55
 pillow==11.0.0
 protobuf==5.29.0
 pyarrow==18.0.0
