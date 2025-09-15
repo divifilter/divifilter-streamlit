@@ -18,7 +18,7 @@ markdown-it-py==3.0.0
 MarkupSafe==3.0.2
 mdurl==0.1.2
 numpy==2.2.3
-packaging==24.2
+packaging==25.0
 pandas==2.2.3
 parse_it==2025.3.1.21.46
 pillow==11.1.0
