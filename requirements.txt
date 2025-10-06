@@ -2,7 +2,7 @@ altair==5.5.0
 attrs==25.1.0
 blinker==1.9.0
 cachetools==5.5.0
-certifi==2025.1.31
+certifi==2025.10.5
 charset-normalizer==3.4.2
 click==8.1.8
 configobj==5.0.9
