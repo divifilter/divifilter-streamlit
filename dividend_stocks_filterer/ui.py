@@ -34,9 +34,9 @@ with st.sidebar:
 
         # filter to only stocks with a dividend streak of over selected # of years
         min_streak_years = st.slider(label="Select minimum number of years of dividend streaks to display", min_value=5,
-                                     max_value=50, value=18, key="min_dividend_streak_years",
+                                     max_value=50, value=10, key="min_dividend_streak_years",
                                      help="Choose the minimum number of consecutive years a stock has paid dividends "
-                                          "to be displayed")
+                                          "to be displayed. 5+ is Cralangers, 10+ is Contenders, 25+ is Aristocrats.")
 
         # filter based on yield, both current & 5y avg
         max_stock_yield_to_filter = mysql_connection.min_max_value_of_any_stock_key( "Div Yield", "max")
@@ -99,10 +99,9 @@ with st.sidebar:
         min_fair_value_to_filter_1y_avg = mysql_connection.min_max_value_of_any_stock_key( "FV %", "min")
         fair_value = st.slider(min_value=int(max(min_fair_value_to_filter_1y_avg, -25.0)),
                                max_value=int(max(max_fair_value_to_filter_1y_avg, 0.0)),
-                               key="max_fair_value", value=0, label="Select maximum fair value % to display",
-                               help="This filter will only display stocks with a Fair Value Percentage (FV%) below "
-                                    "the set FV% indicates how much the company stock is judged to cost compared to "
-                                    "its actual worth")
+                               key="max_fair_value", value=25, label="Select maximum fair value % to display",
+                               help="This filter displays stocks with a Fair Value Percentage (FV%) below "
+                                    "the set limit. 0% means fairly valued, >0% means overvalued, <0% means undervalued.")
 
         # filter to only stocks with a EPS over the selected value
         max_eps_to_filter_1y_avg = mysql_connection.min_max_value_of_any_stock_key( "EPS 1Y", "max")
