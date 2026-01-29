@@ -135,24 +135,24 @@ class MysqlConnection:
             SELECT *
             FROM dividend_data_table
             WHERE 
-                `No Years` >= {}
-                AND `Div Yield` BETWEEN {} AND {}
-                AND `5Y Avg Yield` BETWEEN {} AND {}
-                AND `DGR 1Y` >= {}
-                AND `DGR 3Y` >= {}
-                AND `DGR 5Y` >= {}
-                AND `DGR 10Y` >= {}
-                AND `Chowder Number` >= {}
-                AND `Price` BETWEEN {} AND {}
-                AND `FV %` <= {}
-                AND `EPS 1Y` >= {}
-                AND `Revenue 1Y` >= {}
-                AND `NPM` >= {}
-                AND `CF/Share` >= {}
-                AND `ROE` >= {}
-                AND `P/E` BETWEEN {} AND {}
-                AND `P/BV` <= {}
-                AND `Debt/Capital` <= {}
+                (`No Years` >= {} OR `No Years` IS NULL)
+                AND (`Div Yield` BETWEEN {} AND {} OR `Div Yield` IS NULL)
+                AND (`5Y Avg Yield` BETWEEN {} AND {} OR `5Y Avg Yield` IS NULL)
+                AND (`DGR 1Y` >= {} OR `DGR 1Y` IS NULL)
+                AND (`DGR 3Y` >= {} OR `DGR 3Y` IS NULL)
+                AND (`DGR 5Y` >= {} OR `DGR 5Y` IS NULL)
+                AND (`DGR 10Y` >= {} OR `DGR 10Y` IS NULL)
+                AND (`Chowder Number` >= {} OR `Chowder Number` IS NULL)
+                AND (`Price` BETWEEN {} AND {} OR `Price` IS NULL)
+                AND (`FV %` <= {} OR `FV %` IS NULL)
+                AND (`EPS 1Y` >= {} OR `EPS 1Y` IS NULL)
+                AND (`Revenue 1Y` >= {} OR `Revenue 1Y` IS NULL)
+                AND (`NPM` >= {} OR `NPM` IS NULL)
+                AND (`CF/Share` >= {} OR `CF/Share` IS NULL)
+                AND (`ROE` >= {} OR `ROE` IS NULL)
+                AND (`P/E` BETWEEN {} AND {} OR `P/E` IS NULL)
+                AND (`P/BV` <= {} OR `P/BV` IS NULL)
+                AND (`Debt/Capital` <= {} OR `Debt/Capital` IS NULL)
         """.format(min_streak_years, yield_range_min, yield_range_max, yield_range_min, yield_range_max,
                    min_dgr, min_dgr, min_dgr, min_dgr, chowder_number, price_range_min, price_range_max,
                    fair_value, min_eps, min_revenue, min_npm, min_cf_per_share, min_roe,
