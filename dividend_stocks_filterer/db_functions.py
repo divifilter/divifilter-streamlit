@@ -65,9 +65,9 @@ class MysqlConnection:
         :raise ValueError: if min_or_max isn't min or max which are it's only allowed values
         """
         if min_or_max == "max":
-            query = "SELECT MAX(\"{}\") FROM dividend_data_table WHERE \"Div Yield\" IS NOT NULL;".format(key_of_stock_name)
+            query = "SELECT MAX(`{}`) FROM dividend_data_table WHERE `Div Yield` IS NOT NULL;".format(key_of_stock_name)
         elif min_or_max == "min":
-            query = "SELECT MIN(\"{}\") FROM dividend_data_table WHERE \"Div Yield\" IS NOT NULL;".format(key_of_stock_name)
+            query = "SELECT MIN(`{}`) FROM dividend_data_table WHERE `Div Yield` IS NOT NULL;".format(key_of_stock_name)
         else:
             raise ValueError
 
