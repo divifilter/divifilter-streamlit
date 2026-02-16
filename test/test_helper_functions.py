@@ -92,9 +92,28 @@ test_radar_dict = {
 }
 
 
-class TestReadConfigurations(unittest.TestCase):
+class TestRadarDictToTable(unittest.TestCase):
 
     def test_radar_dict_to_table_conversion(self):
         test_data_frame = radar_dict_to_table(test_radar_dict)
         self.assertIsInstance(test_data_frame, pd.DataFrame)
 
+    def test_radar_dict_to_table_empty_dict(self):
+        result = radar_dict_to_table({})
+        self.assertIsInstance(result, pd.DataFrame)
+        self.assertEqual(len(result), 0)
+
+    def test_radar_dict_to_table_single_entry(self):
+        single = {'A': test_radar_dict['A']}
+        result = radar_dict_to_table(single)
+        self.assertEqual(len(result), 1)
+
+    def test_radar_dict_to_table_column_names(self):
+        result = radar_dict_to_table(test_radar_dict)
+        self.assertIn('Symbol', result.columns)
+        self.assertIn('Price', result.columns)
+        self.assertIn('Div Yield', result.columns)
+
+    def test_radar_dict_to_table_index_matches_keys(self):
+        result = radar_dict_to_table(test_radar_dict)
+        self.assertEqual(list(result.index), ['A', 'AAPL'])
