@@ -1,5 +1,5 @@
 import pymysql
-from typing import List, Union
+from typing import List
 
 
 class MysqlConnection:
@@ -134,7 +134,7 @@ class MysqlConnection:
         filter_query = """
             SELECT *
             FROM dividend_data_table
-            WHERE 
+            WHERE
                 (`No Years` >= {} OR `No Years` IS NULL)
                 AND (`Div Yield` BETWEEN {} AND {} OR `Div Yield` IS NULL)
                 AND (`5Y Avg Yield` BETWEEN {} AND {} OR `5Y Avg Yield` IS NULL)

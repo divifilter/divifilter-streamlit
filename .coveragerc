@@ -1,0 +1,5 @@
+[run]
+source = dividend_stocks_filterer
+
+[report]
+show_missing = True
