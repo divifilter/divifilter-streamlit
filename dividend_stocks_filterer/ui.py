@@ -34,7 +34,7 @@ with st.sidebar:
 
         # filter to only stocks with a dividend streak of over selected # of years
         min_streak_years = st.slider(label="Select minimum number of years of dividend streaks to display", min_value=5,
-                                     max_value=50, value=10, key="min_dividend_streak_years",
+                                     max_value=50, value=5, key="min_dividend_streak_years",
                                      help="Choose the minimum number of consecutive years a stock has paid dividends "
                                           "to be displayed. 5+ is Cralangers, 10+ is Contenders, 25+ is Aristocrats.")
 
@@ -99,7 +99,9 @@ with st.sidebar:
         min_fair_value_to_filter_1y_avg = mysql_connection.min_max_value_of_any_stock_key( "FV %", "min")
         fair_value = st.slider(min_value=int(max(min_fair_value_to_filter_1y_avg, -25.0)),
                                max_value=int(max(max_fair_value_to_filter_1y_avg, 0.0)),
-                               key="max_fair_value", value=25, label="Select maximum fair value % to display",
+                               key="max_fair_value",
+                               value=int(max(max_fair_value_to_filter_1y_avg, 0.0)),
+                               label="Select maximum fair value % to display",
                                help="This filter displays stocks with a Fair Value Percentage (FV%) below "
                                     "the set limit. 0% means fairly valued, >0% means overvalued, <0% means undervalued.")
 
@@ -155,7 +157,9 @@ with st.sidebar:
         min_stock_pe_to_filter = mysql_connection.min_max_value_of_any_stock_key( "P/E", "min")
         pe_range_min, pe_range_max = st.slider(label="Select range of stock to filter by it's P/E",
                                                max_value=min(max_stock_pe_to_filter, 100.0),
-                                               key="dividend_pe_range", value=(0.0, 20.0),
+                                               key="dividend_pe_range",
+                                               value=(max(min_stock_pe_to_filter, -50.0),
+                                                      min(max_stock_pe_to_filter, 100.0)),
                                                min_value=max(min_stock_pe_to_filter, -50.0),
                                                help="Use this slider to filter stocks by price to earnings ratio,"
                                                     " which is the  price of the stoc compared to it's earning, "
@@ -180,7 +184,8 @@ with st.sidebar:
         # filter to only stocks with a Debt/Capital under the selected value
         max_debt_per_capital_to_filter = mysql_connection.min_max_value_of_any_stock_key( "Debt/Capital", "max")
         max_debt_per_capital_value = st.slider(min_value=0.0, key="max_debt_per_capital_value",
-                                               value=0.5, max_value=min(5.0, max_debt_per_capital_to_filter),
+                                               value=max_debt_per_capital_to_filter,
+                                               max_value=max_debt_per_capital_to_filter,
                                                label="Select maximum Debt/Capital to display",
                                                help="the debt to capital ratio, how much the company barrowed devided "
                                                     "to how much it has, the lower the value to less the company owes "
