@@ -99,7 +99,7 @@ class MysqlConnection:
 
     def run_filter_query(self, min_streak_years: int, yield_range_min: float, yield_range_max: float,
                          min_dgr: float, chowder_number: float, price_range_min: float, price_range_max: float,
-                         fair_value: float, min_eps: float, min_revenue: float, min_npm: float, min_cf_per_share: float,
+                         fair_value: float, min_revenue: float, min_npm: float, min_cf_per_share: float,
                          min_roe: float, pe_range_min: float, pe_range_max: float, max_price_per_book_value: float,
                          max_debt_per_capital_value: float, excluded_symbols: List[str], excluded_sectors: List[str],
                          excluded_industries: List[str]) -> dict:
@@ -115,7 +115,6 @@ class MysqlConnection:
             price_range_min (float): Minimum price range.
             price_range_max (float): Maximum price range.
             fair_value (float): Fair value threshold.
-            min_eps (float): Minimum Earnings Per Share (EPS).
             min_revenue (float): Minimum revenue.
             min_npm (float): Minimum Net Profit Margin (NPM).
             min_cf_per_share (float): Minimum Cash Flow Per Share.
@@ -145,7 +144,6 @@ class MysqlConnection:
                 AND (`Chowder Number` >= {} OR `Chowder Number` IS NULL)
                 AND (`Price` BETWEEN {} AND {} OR `Price` IS NULL)
                 AND (`FV %` <= {} OR `FV %` IS NULL)
-                AND (`EPS 1Y` >= {} OR `EPS 1Y` IS NULL)
                 AND (`Revenue 1Y` >= {} OR `Revenue 1Y` IS NULL)
                 AND (`NPM` >= {} OR `NPM` IS NULL)
                 AND (`CF/Share` >= {} OR `CF/Share` IS NULL)
@@ -155,7 +153,7 @@ class MysqlConnection:
                 AND (`Debt/Capital` <= {} OR `Debt/Capital` IS NULL)
         """.format(min_streak_years, yield_range_min, yield_range_max, yield_range_min, yield_range_max,
                    min_dgr, min_dgr, min_dgr, min_dgr, chowder_number, price_range_min, price_range_max,
-                   fair_value, min_eps, min_revenue, min_npm, min_cf_per_share, min_roe,
+                   fair_value, min_revenue, min_npm, min_cf_per_share, min_roe,
                    pe_range_min, pe_range_max, max_price_per_book_value, max_debt_per_capital_value)
 
         # Add NOT IN clauses only if the exclusion lists are not empty

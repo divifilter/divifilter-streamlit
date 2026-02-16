@@ -17,7 +17,6 @@ class TestUI(unittest.TestCase):
             0,             # chowder_number (single int)
             (1.0, 500.0),  # price_range_min, price_range_max (tuple)
             25,            # fair_value (single int)
-            0.0,           # min_eps
             0.0,           # min_revenue
             0.0,           # min_npm
             0.0,           # min_cf_per_share

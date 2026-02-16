@@ -105,16 +105,6 @@ with st.sidebar:
                                help="This filter displays stocks with a Fair Value Percentage (FV%) below "
                                     "the set limit. 0% means fairly valued, >0% means overvalued, <0% means undervalued.")
 
-        # filter to only stocks with a EPS over the selected value
-        max_eps_to_filter_1y_avg = mysql_connection.min_max_value_of_any_stock_key( "EPS 1Y", "max")
-        min_eps_to_filter_1y_avg = mysql_connection.min_max_value_of_any_stock_key( "EPS 1Y", "min")
-        min_eps = st.slider(min_value=min_eps_to_filter_1y_avg, key="min_eps_number", value=0.0,
-                            max_value=max_eps_to_filter_1y_avg,
-                            label="Select minimum EPS growth over 1 year to display",
-                            help="EPS stands for earning per share, how much a company earned for each share at the "
-                                 "timeframe, this will filter to only companies with the given value has grown over "
-                                 "the past year or higher")
-
         # filter to only stocks with a revenue over 1y over the selected value
         max_revenue_1y_avg_to_filter_1y_avg = mysql_connection.min_max_value_of_any_stock_key( "Revenue 1Y", "max")
         min_revenue_1y_avg_to_filter_1y_avg = mysql_connection.min_max_value_of_any_stock_key( "Revenue 1Y", "min")
@@ -229,7 +219,7 @@ st.divider()
 
 st.dataframe(radar_dict_to_table(mysql_connection.run_filter_query(min_streak_years, yield_range_min, yield_range_max,
                                                                    min_dgr, chowder_number, price_range_min,
-                                                                   price_range_max, fair_value, min_eps, min_revenue,
+                                                                   price_range_max, fair_value, min_revenue,
                                                                    min_npm, min_cf_per_share,min_roe, pe_range_min,
                                                                    pe_range_max, max_price_per_book_value,
                                                                    max_debt_per_capital_value, excluded_symbols,

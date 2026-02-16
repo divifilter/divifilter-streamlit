@@ -106,7 +106,7 @@ class TestMysqlConnection(unittest.TestCase):
         result = self.db.run_filter_query(
             min_streak_years=10, yield_range_min=0.0, yield_range_max=10.0,
             min_dgr=0.0, chowder_number=0, price_range_min=1.0, price_range_max=500.0,
-            fair_value=25, min_eps=0.0, min_revenue=0.0, min_npm=0.0,
+            fair_value=25, min_revenue=0.0, min_npm=0.0,
             min_cf_per_share=0.0, min_roe=0.0, pe_range_min=0.0, pe_range_max=50.0,
             max_price_per_book_value=100.0, max_debt_per_capital_value=1.0,
             excluded_symbols=[], excluded_sectors=[], excluded_industries=[]
@@ -128,7 +128,7 @@ class TestMysqlConnection(unittest.TestCase):
         result = self.db.run_filter_query(
             min_streak_years=10, yield_range_min=0.0, yield_range_max=10.0,
             min_dgr=0.0, chowder_number=0, price_range_min=1.0, price_range_max=500.0,
-            fair_value=25, min_eps=0.0, min_revenue=0.0, min_npm=0.0,
+            fair_value=25, min_revenue=0.0, min_npm=0.0,
             min_cf_per_share=0.0, min_roe=0.0, pe_range_min=0.0, pe_range_max=50.0,
             max_price_per_book_value=100.0, max_debt_per_capital_value=1.0,
             excluded_symbols=["AAPL"], excluded_sectors=["Technology"],
