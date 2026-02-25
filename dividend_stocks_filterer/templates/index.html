@@ -4,6 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Divifilter - Easily Filter Dividend Stocks</title>
+  <!-- Inter font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <!-- Bootstrap 5 -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
   <!-- noUiSlider -->
@@ -11,7 +15,7 @@
   <!-- Tom Select -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.bootstrap5.min.css">
   <style>
-    body { background-color: #0d1117; }
+    body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background-color: #0d1117; }
     .sidebar {
       position: sticky; top: 0; height: 100vh; overflow-y: auto;
       background-color: #161b22;
@@ -39,7 +43,21 @@
     .disclaimer {
       background-color: #161b22; border: 1px solid #21262d; border-radius: 6px;
       color: #6e7681; font-size: 0.68rem; padding: 0.5rem 0.6rem; margin-top: 1rem;
+      line-height: 1.5;
     }
+    /* Sidebar scrollbar */
+    .sidebar::-webkit-scrollbar { width: 5px; }
+    .sidebar::-webkit-scrollbar-track { background: transparent; }
+    .sidebar::-webkit-scrollbar-thumb { background: #30363d; border-radius: 3px; }
+    .sidebar::-webkit-scrollbar-thumb:hover { background: #4a9eff; }
+    /* Table dark polish */
+    .table-dark { --bs-table-border-color: #30363d; }
+    .table-dark thead th {
+      background-color: #0d1117 !important;
+      border-bottom: 2px solid #4a9eff;
+      font-size: 0.72rem; letter-spacing: 0.05em; text-transform: uppercase; color: #8b949e;
+    }
+    .table-dark tbody td { font-size: 0.82rem; vertical-align: middle; }
   </style>
 </head>
 <body>
@@ -207,7 +225,7 @@
     <div class="col-md-9 col-lg-10 p-3">
       <div class="results-card">
         <div class="d-flex align-items-center mb-3 gap-2">
-          <h4 class="mb-0">Results</h4>
+          <h4 class="mb-0 fw-semibold" style="color:#e6edf3; letter-spacing:-.01em;">Results</h4>
           <span id="spinner" class="spinner-border spinner-border-sm text-primary ms-2" role="status"></span>
         </div>
         <div id="results">
