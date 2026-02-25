@@ -31,6 +31,7 @@
     .noUi-connect { background: #4a9eff; }
     /* Labels & values */
     .slider-label { font-size: 0.8rem; font-weight: 500; margin-bottom: 4px; color: #8b949e; }
+    .slider-label[data-bs-toggle="tooltip"] { cursor: help; }
     .slider-wrap { margin-bottom: 1.1rem; }
     .slider-value { font-size: 0.72rem; color: #4a9eff; margin-top: 5px; text-align: right; font-family: monospace; }
     /* Section headers */
@@ -134,14 +135,14 @@
           <p class="section-header">Dividend</p>
 
           <div class="slider-wrap">
-            <div class="slider-label">Min streak years</div>
+            <div class="slider-label" data-bs-toggle="tooltip" data-bs-placement="right" title="Choose the minimum number of consecutive years a stock has paid dividends. 5+ = Challengers, 10+ = Contenders, 25+ = Aristocrats.">Min streak years</div>
             <div id="sl-streak"></div>
             <input type="hidden" name="min_streak_years" id="v-streak" value="{{ ranges.streak_default }}">
             <div class="slider-value" id="lbl-streak">{{ ranges.streak_default }} yr</div>
           </div>
 
           <div class="slider-wrap">
-            <div class="slider-label">Dividend yield range (%)</div>
+            <div class="slider-label" data-bs-toggle="tooltip" data-bs-placement="right" title="Filter stocks by dividend yield — the percentage of the stock&#39;s current value paid as dividends. Also filters by 5-year average yield.">Dividend yield range (%)</div>
             <div id="sl-yield"></div>
             <input type="hidden" name="yield_range_min" id="v-yield-min" value="0">
             <input type="hidden" name="yield_range_max" id="v-yield-max" value="{{ ranges.yield_max }}">
@@ -149,14 +150,14 @@
           </div>
 
           <div class="slider-wrap">
-            <div class="slider-label">Min DGR (%)</div>
+            <div class="slider-label" data-bs-toggle="tooltip" data-bs-placement="right" title="Filters the Dividend Growth Rate across 1, 3, 5 &amp; 10 years (where available).">Min DGR (%)</div>
             <div id="sl-dgr"></div>
             <input type="hidden" name="min_dgr" id="v-dgr" value="0">
             <div class="slider-value" id="lbl-dgr">0%</div>
           </div>
 
           <div class="slider-wrap">
-            <div class="slider-label">Min Chowder number</div>
+            <div class="slider-label" data-bs-toggle="tooltip" data-bs-placement="right" title="Chowder number = dividend yield + DGR. A value of 12+ is generally considered strong. Higher is better.">Min Chowder number</div>
             <div id="sl-chowder"></div>
             <input type="hidden" name="chowder_number" id="v-chowder" value="0">
             <div class="slider-value" id="lbl-chowder">0</div>
@@ -168,7 +169,7 @@
           <p class="section-header">Financial</p>
 
           <div class="slider-wrap">
-            <div class="slider-label">Price range ($)</div>
+            <div class="slider-label" data-bs-toggle="tooltip" data-bs-placement="right" title="Filter by minimum and maximum stock price.">Price range ($)</div>
             <div id="sl-price"></div>
             <input type="hidden" name="price_range_min" id="v-price-min" value="1">
             <input type="hidden" name="price_range_max" id="v-price-max" value="{{ ranges.price_max }}">
@@ -176,42 +177,42 @@
           </div>
 
           <div class="slider-wrap">
-            <div class="slider-label">Max fair value (%)</div>
+            <div class="slider-label" data-bs-toggle="tooltip" data-bs-placement="right" title="0% = fairly valued, &gt;0% = overvalued, &lt;0% = undervalued. Set lower to find undervalued stocks.">Max fair value (%)</div>
             <div id="sl-fv"></div>
             <input type="hidden" name="fair_value" id="v-fv" value="{{ ranges.fv_max }}">
             <div class="slider-value" id="lbl-fv">{{ ranges.fv_max }}%</div>
           </div>
 
           <div class="slider-wrap">
-            <div class="slider-label">Min revenue growth 1Y</div>
+            <div class="slider-label" data-bs-toggle="tooltip" data-bs-placement="right" title="Filters to companies whose revenues have grown at or above the given value over the past year.">Min revenue growth 1Y</div>
             <div id="sl-revenue"></div>
             <input type="hidden" name="min_revenue" id="v-revenue" value="0">
             <div class="slider-value" id="lbl-revenue">0</div>
           </div>
 
           <div class="slider-wrap">
-            <div class="slider-label">Min NPM (%)</div>
+            <div class="slider-label" data-bs-toggle="tooltip" data-bs-placement="right" title="Net Profit Margin = earnings after taxes ÷ net revenue × 100%. Higher means more profit available to shareholders.">Min NPM (%)</div>
             <div id="sl-npm"></div>
             <input type="hidden" name="min_npm" id="v-npm" value="0">
             <div class="slider-value" id="lbl-npm">0%</div>
           </div>
 
           <div class="slider-wrap">
-            <div class="slider-label">Min CF/Share</div>
+            <div class="slider-label" data-bs-toggle="tooltip" data-bs-placement="right" title="Cash Flow per Share = (after-tax earnings + depreciation) ÷ shares. A measure of financial strength; often preferred over EPS.">Min CF/Share</div>
             <div id="sl-cf"></div>
             <input type="hidden" name="min_cf_per_share" id="v-cf" value="0">
             <div class="slider-value" id="lbl-cf">0</div>
           </div>
 
           <div class="slider-wrap">
-            <div class="slider-label">Min ROE</div>
+            <div class="slider-label" data-bs-toggle="tooltip" data-bs-placement="right" title="Return on Equity = net income ÷ total equity. Filters to companies with ROE at or above the given value.">Min ROE</div>
             <div id="sl-roe"></div>
             <input type="hidden" name="min_roe" id="v-roe" value="0">
             <div class="slider-value" id="lbl-roe">0</div>
           </div>
 
           <div class="slider-wrap">
-            <div class="slider-label">P/E range</div>
+            <div class="slider-label" data-bs-toggle="tooltip" data-bs-placement="right" title="Price-to-Earnings ratio. Negative = company losing money. Under 15 is often considered cheap, over 20 expensive.">P/E range</div>
             <div id="sl-pe"></div>
             <input type="hidden" name="pe_range_min" id="v-pe-min" value="{{ ranges.pe_min }}">
             <input type="hidden" name="pe_range_max" id="v-pe-max" value="{{ ranges.pe_max }}">
@@ -219,14 +220,14 @@
           </div>
 
           <div class="slider-wrap">
-            <div class="slider-label">Max P/BV</div>
+            <div class="slider-label" data-bs-toggle="tooltip" data-bs-placement="right" title="Price-to-Book Value. Lower values generally indicate better cost-to-value ratio.">Max P/BV</div>
             <div id="sl-pbv"></div>
             <input type="hidden" name="max_price_per_book_value" id="v-pbv" value="{{ ranges.pbv_max }}">
             <div class="slider-value" id="lbl-pbv">{{ ranges.pbv_max }}</div>
           </div>
 
           <div class="slider-wrap">
-            <div class="slider-label">Max Debt/Capital</div>
+            <div class="slider-label" data-bs-toggle="tooltip" data-bs-placement="right" title="Debt-to-capital ratio. Investors often prefer under 0.6 (60%), though up to 0.8 can be acceptable for growing companies.">Max Debt/Capital</div>
             <div id="sl-debt"></div>
             <input type="hidden" name="max_debt_per_capital_value" id="v-debt" value="{{ ranges.debt_max }}">
             <div class="slider-value" id="lbl-debt">{{ ranges.debt_max }}</div>
@@ -238,21 +239,21 @@
           <p class="section-header">Exclusions</p>
 
           <div class="mb-2">
-            <label class="slider-label">Exclude symbols</label>
+            <label class="slider-label" data-bs-toggle="tooltip" data-bs-placement="right" title="Exclude specific stocks from your results by ticker symbol.">Exclude symbols</label>
             <select id="sel-symbols" name="excluded_symbols" multiple placeholder="Select symbols…">
               {% for s in ranges.symbols %}<option value="{{ s }}">{{ s }}</option>{% endfor %}
             </select>
           </div>
 
           <div class="mb-2">
-            <label class="slider-label">Exclude sectors</label>
+            <label class="slider-label" data-bs-toggle="tooltip" data-bs-placement="right" title="Exclude all stocks from one or more sectors.">Exclude sectors</label>
             <select id="sel-sectors" name="excluded_sectors" multiple placeholder="Select sectors…">
               {% for s in ranges.sectors %}<option value="{{ s }}">{{ s }}</option>{% endfor %}
             </select>
           </div>
 
           <div class="mb-2">
-            <label class="slider-label">Exclude industries</label>
+            <label class="slider-label" data-bs-toggle="tooltip" data-bs-placement="right" title="Exclude all stocks from one or more industries.">Exclude industries</label>
             <select id="sel-industries" name="excluded_industries" multiple placeholder="Select industries…">
               {% for s in ranges.industries %}<option value="{{ s }}">{{ s }}</option>{% endfor %}
             </select>
@@ -401,6 +402,11 @@
       onItemAdd: function () { document.getElementById('filters').dispatchEvent(new Event('change', { bubbles: true })); },
       onItemRemove: function () { document.getElementById('filters').dispatchEvent(new Event('change', { bubbles: true })); }
     });
+  });
+
+  // ── Tooltips ───────────────────────────────────────────────────────────────
+  document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(function (el) {
+    new bootstrap.Tooltip(el);
   });
 })();
 </script>
