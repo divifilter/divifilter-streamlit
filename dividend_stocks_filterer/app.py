@@ -64,7 +64,11 @@ ranges = {
 
 @app.get("/health")
 async def health():
-    return JSONResponse({"status": "ok"})
+    try:
+        db.run_sql_query("SELECT 1")
+        return JSONResponse({"status": "ok"})
+    except Exception:
+        return JSONResponse({"status": "error"}, status_code=503)
 
 
 @app.get("/", response_class=HTMLResponse)

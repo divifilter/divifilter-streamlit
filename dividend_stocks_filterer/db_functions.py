@@ -18,9 +18,11 @@ class MysqlConnection:
             Returns:
                 None
             """
-        self.conn = pymysql.connect(host=db_host, port=db_port, user=db_user, passwd=db_password, db=db_schema)
+        self.conn = pymysql.connect(host=db_host, port=db_port, user=db_user, passwd=db_password, db=db_schema,
+                                    connect_timeout=10, read_timeout=30)
         self.dict_conn = pymysql.connect(host=db_host, port=db_port, user=db_user, passwd=db_password, db=db_schema,
-                                         cursorclass=pymysql.cursors.DictCursor)
+                                         cursorclass=pymysql.cursors.DictCursor,
+                                         connect_timeout=10, read_timeout=30)
 
     def run_sql_query(self, sql_query:str, tuple_or_dict:str = "tuple") -> list:
         """
@@ -34,8 +36,10 @@ class MysqlConnection:
             list: A list of tuples containing the query response.
         """
         if tuple_or_dict == "tuple":
+            self.conn.ping(reconnect=True)
             cur = self.conn.cursor()
         elif tuple_or_dict == "dict":
+            self.dict_conn.ping(reconnect=True)
             cur = self.dict_conn.cursor()
         else:
             raise ValueError
