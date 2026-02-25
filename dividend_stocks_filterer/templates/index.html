@@ -51,13 +51,30 @@
     .sidebar::-webkit-scrollbar-thumb { background: #30363d; border-radius: 3px; }
     .sidebar::-webkit-scrollbar-thumb:hover { background: #4a9eff; }
     /* Table dark polish */
+    .table-responsive { max-height: 75vh; overflow-y: auto; }
     .table-dark { --bs-table-border-color: #30363d; }
     .table-dark thead th {
+      position: sticky; top: 0; z-index: 2;
       background-color: #0d1117 !important;
       border-bottom: 2px solid #4a9eff;
       font-size: 0.72rem; letter-spacing: 0.05em; text-transform: uppercase; color: #8b949e;
     }
+    .table-dark thead th:first-child { left: 0; z-index: 3; }
+    .table-dark tbody th {
+      position: sticky; left: 0; z-index: 1;
+      background-color: #13161d;
+      border-right: 1px solid #30363d;
+      font-weight: 600; white-space: nowrap;
+    }
     .table-dark tbody td { font-size: 0.82rem; vertical-align: middle; }
+    .table-dark {
+      --bs-table-hover-bg: rgba(74, 158, 255, 0.2);
+      --bs-table-hover-color: #e6edf3;
+    }
+    .table-dark.table-hover tbody tr:hover th {
+      background-color: rgba(74, 158, 255, 0.2) !important;
+      color: #e6edf3;
+    }
   </style>
 </head>
 <body>
