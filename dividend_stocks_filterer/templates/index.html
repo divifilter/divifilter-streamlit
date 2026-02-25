@@ -15,7 +15,11 @@
   <!-- Tom Select -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.bootstrap5.min.css">
   <style>
-    body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background-color: #0d1117; overflow: hidden; }
+    html { height: 100%; }
+    body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background-color: #0d1117; overflow: hidden; height: 100%; }
+    .container-fluid { height: 100vh; }
+    .container-fluid > .row { height: 100%; }
+    #main-col { display: flex; flex-direction: column; min-height: 0; }
     .sidebar {
       position: sticky; top: 0; height: 100vh; overflow-y: auto;
       background-color: #161b22;
@@ -38,7 +42,8 @@
     #spinner { display: none; }
     .htmx-request #spinner { display: inline-block; }
     /* Results card */
-    .results-card { background: #161b22; border: 1px solid #21262d; border-radius: 8px; padding: 1rem; }
+    .results-card { background: #161b22; border: 1px solid #21262d; border-radius: 8px; padding: 1rem; flex: 1; display: flex; flex-direction: column; min-height: 0; }
+    #results { flex: 1; display: flex; flex-direction: column; min-height: 0; }
     /* Disclaimer */
     .disclaimer {
       background-color: #161b22; border: 1px solid #21262d; border-radius: 6px;
@@ -51,7 +56,7 @@
     .sidebar::-webkit-scrollbar-thumb { background: #30363d; border-radius: 3px; }
     .sidebar::-webkit-scrollbar-thumb:hover { background: #4a9eff; }
     /* Table dark polish */
-    .table-responsive { max-height: 75vh; overflow-y: auto; }
+    .table-responsive { flex: 1; min-height: 0; overflow-y: auto; }
     .table-dark { --bs-table-border-color: #30363d; }
     .table-dark thead th {
       position: sticky; top: 0; z-index: 2;
@@ -239,7 +244,7 @@
     </div><!-- /sidebar -->
 
     <!-- Main content -->
-    <div class="col-md-9 col-lg-10 p-3">
+    <div class="col-md-9 col-lg-10 p-3" id="main-col">
       <div class="results-card">
         <div class="d-flex align-items-center mb-3 gap-2">
           <h4 class="mb-0 fw-semibold" style="color:#e6edf3; letter-spacing:-.01em;">Results</h4>
