@@ -121,6 +121,11 @@
     .ts-control input {
       color: #e6edf3;
     }
+    /* Sortable column headers */
+    .table-dark thead th { cursor: pointer; user-select: none; white-space: nowrap; }
+    .sort-icon { margin-left: 4px; opacity: 0.35; font-style: normal; }
+    .table-dark thead th.sort-asc  .sort-icon,
+    .table-dark thead th.sort-desc .sort-icon { opacity: 1; color: #4a9eff; }
   </style>
 </head>
 <body>
@@ -492,6 +497,142 @@
   // ── Tooltips ───────────────────────────────────────────────────────────────
   document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(function (el) {
     new bootstrap.Tooltip(el);
+  });
+})();
+
+// ── Column sorting ─────────────────────────────────────────────────────────
+(function () {
+  // Persists across HTMX swaps
+  var sortState = { colIndex: null, dir: null };  // dir: 'asc' | 'desc' | null
+  var originalRows = [];   // row order as-received from server
+
+  function cellText(row, colIndex) {
+    var cell = row.cells[colIndex];
+    return cell ? cell.textContent.trim() : '';
+  }
+
+  function inferType(rows, colIndex) {
+    // Sample up to 10 non-empty values to decide numeric vs string
+    for (var i = 0; i < Math.min(rows.length, 10); i++) {
+      var t = cellText(rows[i], colIndex);
+      if (t === '' || t === '—' || t === 'N/A') continue;
+      // Strip leading $, trailing %, commas
+      var cleaned = t.replace(/[$,%]/g, '').trim();
+      if (!isNaN(parseFloat(cleaned)) && isFinite(cleaned)) return 'numeric';
+      return 'string';
+    }
+    return 'string';
+  }
+
+  function sortRows(rows, colIndex, dir, type) {
+    return rows.slice().sort(function (a, b) {
+      var av = cellText(a, colIndex);
+      var bv = cellText(b, colIndex);
+      var empty = function(v) { return v === '' || v === '—' || v === 'N/A'; };
+      // Always sort empties to the bottom regardless of direction
+      if (empty(av) && empty(bv)) return 0;
+      if (empty(av)) return 1;
+      if (empty(bv)) return -1;
+
+      var cmp;
+      if (type === 'numeric') {
+        var an = parseFloat(av.replace(/[$,%]/g, ''));
+        var bn = parseFloat(bv.replace(/[$,%]/g, ''));
+        cmp = an - bn;
+      } else {
+        cmp = av.localeCompare(bv);
+      }
+      return dir === 'asc' ? cmp : -cmp;
+    });
+  }
+
+  function updateIcons(ths, activeIndex, dir) {
+    ths.forEach(function (th, i) {
+      th.classList.remove('sort-asc', 'sort-desc');
+      var icon = th.querySelector('.sort-icon');
+      if (!icon) return;
+      if (i === activeIndex) {
+        icon.textContent = dir === 'asc' ? '↑' : '↓';
+        th.classList.add(dir === 'asc' ? 'sort-asc' : 'sort-desc');
+      } else {
+        icon.textContent = '↕';
+      }
+    });
+  }
+
+  function initTable(table) {
+    if (!table) return;
+    var thead = table.querySelector('thead tr');
+    if (!thead) return;
+    var ths = Array.from(thead.querySelectorAll('th'));
+    var tbody = table.querySelector('tbody');
+    if (!tbody) return;
+
+    // Snapshot original row order (server order)
+    originalRows = Array.from(tbody.querySelectorAll('tr'));
+
+    // Inject sort icons into every header (replace if already there)
+    ths.forEach(function (th) {
+      if (!th.querySelector('.sort-icon')) {
+        var span = document.createElement('span');
+        span.className = 'sort-icon';
+        span.textContent = '↕';
+        th.appendChild(span);
+      }
+    });
+
+    // Re-apply persisted sort state after an HTMX swap
+    if (sortState.colIndex !== null && sortState.dir !== null) {
+      var type = inferType(originalRows, sortState.colIndex);
+      var sorted = sortRows(originalRows, sortState.colIndex, sortState.dir, type);
+      sorted.forEach(function (tr) { tbody.appendChild(tr); });
+      updateIcons(ths, sortState.colIndex, sortState.dir);
+    }
+  }
+
+  // Event delegation — #results persists across HTMX swaps
+  document.getElementById('results').addEventListener('click', function (e) {
+    var th = e.target.closest('thead th');
+    if (!th) return;
+    var table = th.closest('table');
+    if (!table) return;
+    var thead = table.querySelector('thead tr');
+    var ths = Array.from(thead.querySelectorAll('th'));
+    var colIndex = ths.indexOf(th);
+    var tbody = table.querySelector('tbody');
+    var rows = Array.from(tbody.querySelectorAll('tr'));
+
+    // Cycle: none → desc → asc → none (clear)
+    var newDir;
+    if (sortState.colIndex === colIndex) {
+      newDir = sortState.dir === 'desc' ? 'asc' : sortState.dir === 'asc' ? null : 'desc';
+    } else {
+      newDir = 'desc';
+    }
+
+    sortState.colIndex = newDir === null ? null : colIndex;
+    sortState.dir = newDir;
+
+    if (newDir === null) {
+      // Restore original order
+      originalRows.forEach(function (tr) { tbody.appendChild(tr); });
+      updateIcons(ths, -1, null);
+    } else {
+      var type = inferType(rows, colIndex);
+      var sorted = sortRows(rows, colIndex, newDir, type);
+      sorted.forEach(function (tr) { tbody.appendChild(tr); });
+      updateIcons(ths, colIndex, newDir);
+    }
+  });
+
+  // Init on page load (initial table)
+  document.addEventListener('DOMContentLoaded', function () {
+    initTable(document.querySelector('#results table'));
+  });
+
+  // Re-init after every HTMX swap
+  document.body.addEventListener('htmx:afterSettle', function () {
+    initTable(document.querySelector('#results table'));
   });
 })();
 </script>
