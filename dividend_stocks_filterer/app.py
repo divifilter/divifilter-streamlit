@@ -3,6 +3,7 @@ import sys
 sys.path.insert(0, os.path.dirname(__file__))
 
 from fastapi import FastAPI, Request, Form
+from fastapi.concurrency import run_in_threadpool
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
 from typing import List
@@ -65,7 +66,7 @@ ranges = {
 @app.get("/health")
 async def health():
     try:
-        db.run_sql_query("SELECT 1")
+        await run_in_threadpool(db.run_sql_query, "SELECT 1")
         return JSONResponse({"status": "ok"})
     except Exception:
         return JSONResponse({"status": "error"}, status_code=503)
@@ -73,8 +74,9 @@ async def health():
 
 @app.get("/", response_class=HTMLResponse)
 async def index(request: Request):
-    db_update_dates = db.check_db_update_dates()
-    initial_df = radar_dict_to_table(db.run_filter_query(
+    db_update_dates = await run_in_threadpool(db.check_db_update_dates)
+    initial_df = radar_dict_to_table(await run_in_threadpool(
+        db.run_filter_query,
         ranges["streak_default"], 0.0, ranges["yield_max"], 0.0, 0,
         1.0, ranges["price_max"], ranges["fv_max"], 0.0, 0.0, 0.0, 0.0,
         ranges["pe_min"], ranges["pe_max"], ranges["pbv_max"],
@@ -113,7 +115,8 @@ async def filter_stocks(
     excluded_sectors: List[str] = Form(default=[]),
     excluded_industries: List[str] = Form(default=[]),
 ):
-    results = db.run_filter_query(
+    results = await run_in_threadpool(
+        db.run_filter_query,
         min_streak_years, yield_range_min, yield_range_max,
         min_dgr, chowder_number, price_range_min, price_range_max,
         fair_value, min_revenue, min_npm, min_cf_per_share, min_roe,
