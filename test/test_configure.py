@@ -34,3 +34,15 @@ class TestReadConfigurations(unittest.TestCase):
                 del os.environ["DB_HOST"]
             else:
                 os.environ["DB_HOST"] = original
+
+    def test_read_configurations_db_pass_env_var_override(self):
+        original = os.environ.get("DB_PASS")
+        try:
+            os.environ["DB_PASS"] = "secret123"
+            config = read_configurations(config_folder="tests/test_configs/missing_key")
+            self.assertEqual(config["db_pass"], "secret123")
+        finally:
+            if original is None:
+                del os.environ["DB_PASS"]
+            else:
+                os.environ["DB_PASS"] = original

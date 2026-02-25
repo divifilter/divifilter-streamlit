@@ -364,3 +364,21 @@ class TestMysqlConnection(unittest.TestCase):
         self.assertIn("'AAPL'", executed_query)
         self.assertIn("'MSFT'", executed_query)
         self.assertIn("'GOOG'", executed_query)
+
+    def test_run_sql_query_calls_ping_tuple(self):
+        mock_cursor = MagicMock()
+        mock_cursor.fetchall.return_value = []
+        self.mock_conn.cursor.return_value = mock_cursor
+
+        self.db.run_sql_query("SELECT 1", "tuple")
+
+        self.mock_conn.ping.assert_called_once_with(reconnect=True)
+
+    def test_run_sql_query_calls_ping_dict(self):
+        mock_cursor = MagicMock()
+        mock_cursor.fetchall.return_value = []
+        self.mock_dict_conn.cursor.return_value = mock_cursor
+
+        self.db.run_sql_query("SELECT 1", "dict")
+
+        self.mock_dict_conn.ping.assert_called_once_with(reconnect=True)

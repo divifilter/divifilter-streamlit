@@ -185,3 +185,81 @@ class TestApp(unittest.TestCase):
         args = self.mock_mysql.run_filter_query.call_args
         self.assertIn("AAPL", args[0][16])
         self.assertIn("MSFT", args[0][16])
+
+    def test_health_returns_503_on_db_error(self):
+        self.mock_mysql.run_sql_query.side_effect = Exception("db down")
+        response = self.client.get("/health")
+        self.assertEqual(response.status_code, 503)
+        self.assertEqual(response.json(), {"status": "error"})
+
+    def test_post_filter_excluded_sectors_forwarded(self):
+        self.mock_mysql.run_filter_query.reset_mock()
+        self.client.post("/filter", data={
+            "min_streak_years": 5,
+            "yield_range_min": 0.0,
+            "yield_range_max": 10.0,
+            "min_dgr": 0.0,
+            "chowder_number": 0,
+            "price_range_min": 1.0,
+            "price_range_max": 500.0,
+            "fair_value": 0,
+            "min_revenue": 0.0,
+            "min_npm": 0.0,
+            "min_cf_per_share": 0.0,
+            "min_roe": 0.0,
+            "pe_range_min": -50.0,
+            "pe_range_max": 100.0,
+            "max_price_per_book_value": 10.0,
+            "max_debt_per_capital_value": 1.0,
+            "excluded_sectors": ["Technology"],
+        })
+        args = self.mock_mysql.run_filter_query.call_args
+        self.assertIn("Technology", args[0][17])
+
+    def test_post_filter_excluded_industries_forwarded(self):
+        self.mock_mysql.run_filter_query.reset_mock()
+        self.client.post("/filter", data={
+            "min_streak_years": 5,
+            "yield_range_min": 0.0,
+            "yield_range_max": 10.0,
+            "min_dgr": 0.0,
+            "chowder_number": 0,
+            "price_range_min": 1.0,
+            "price_range_max": 500.0,
+            "fair_value": 0,
+            "min_revenue": 0.0,
+            "min_npm": 0.0,
+            "min_cf_per_share": 0.0,
+            "min_roe": 0.0,
+            "pe_range_min": -50.0,
+            "pe_range_max": 100.0,
+            "max_price_per_book_value": 10.0,
+            "max_debt_per_capital_value": 1.0,
+            "excluded_industries": ["Banking"],
+        })
+        args = self.mock_mysql.run_filter_query.call_args
+        self.assertIn("Banking", args[0][18])
+
+    def test_post_filter_row_count_in_response(self):
+        self.mocks['helper_functions'].radar_dict_to_table.return_value = pandas.DataFrame(
+            {"Symbol": ["AAPL", "MSFT"], "Price": [150.0, 300.0]}
+        )
+        response = self.client.post("/filter", data={
+            "min_streak_years": 5,
+            "yield_range_min": 0.0,
+            "yield_range_max": 10.0,
+            "min_dgr": 0.0,
+            "chowder_number": 0,
+            "price_range_min": 1.0,
+            "price_range_max": 500.0,
+            "fair_value": 0,
+            "min_revenue": 0.0,
+            "min_npm": 0.0,
+            "min_cf_per_share": 0.0,
+            "min_roe": 0.0,
+            "pe_range_min": -50.0,
+            "pe_range_max": 100.0,
+            "max_price_per_book_value": 10.0,
+            "max_debt_per_capital_value": 1.0,
+        })
+        self.assertIn("2 stock(s) found", response.text)
