@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,15 +11,35 @@
   <!-- Tom Select -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.bootstrap5.min.css">
   <style>
-    body { background-color: #f8f9fa; }
-    .sidebar { position: sticky; top: 0; height: 100vh; overflow-y: auto; }
-    .noUi-connect { background: #0d6efd; }
-    .noUi-handle { cursor: pointer; }
-    .slider-label { font-size: 0.8rem; font-weight: 500; margin-bottom: 4px; color: #495057; }
+    body { background-color: #0d1117; }
+    .sidebar {
+      position: sticky; top: 0; height: 100vh; overflow-y: auto;
+      background-color: #161b22;
+    }
+    /* noUiSlider dark overrides */
+    .noUi-target { background: #21262d; border-color: #30363d; box-shadow: none; }
+    .noUi-handle { background: #1f2937; border-color: #4a9eff; box-shadow: none; cursor: pointer; }
+    .noUi-handle::before, .noUi-handle::after { background: #4a9eff; }
+    .noUi-connect { background: #4a9eff; }
+    /* Labels & values */
+    .slider-label { font-size: 0.8rem; font-weight: 500; margin-bottom: 4px; color: #8b949e; }
     .slider-wrap { margin-bottom: 1.1rem; }
-    .slider-value { font-size: 0.75rem; color: #6c757d; margin-top: 4px; text-align: right; }
+    .slider-value { font-size: 0.72rem; color: #4a9eff; margin-top: 5px; text-align: right; font-family: monospace; }
+    /* Section headers */
+    .section-header {
+      font-size: 0.7rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+      color: #8b949e; border-left: 2px solid #4a9eff; padding-left: 6px; margin-bottom: 10px;
+    }
+    /* Spinner */
     #spinner { display: none; }
     .htmx-request #spinner { display: inline-block; }
+    /* Results card */
+    .results-card { background: #161b22; border: 1px solid #21262d; border-radius: 8px; padding: 1rem; }
+    /* Disclaimer */
+    .disclaimer {
+      background-color: #161b22; border: 1px solid #21262d; border-radius: 6px;
+      color: #6e7681; font-size: 0.68rem; padding: 0.5rem 0.6rem; margin-top: 1rem;
+    }
   </style>
 </head>
 <body>
@@ -27,7 +47,7 @@
   <div class="row">
 
     <!-- Sidebar -->
-    <div class="col-md-3 col-lg-2 sidebar bg-white border-end shadow-sm p-3">
+    <div class="col-md-3 col-lg-2 sidebar p-3">
       <h5 class="mb-1 fw-bold text-primary">Divifilter</h5>
       <p class="text-muted small mb-3">
         Data updated:
@@ -44,7 +64,7 @@
 
         <!-- ── Dividend ────────────────────────────────── -->
         <div class="mb-2">
-          <p class="fw-semibold text-uppercase small text-secondary mb-2" style="letter-spacing:.05em;">Dividend</p>
+          <p class="section-header">Dividend</p>
 
           <div class="slider-wrap">
             <div class="slider-label">Min streak years</div>
@@ -78,7 +98,7 @@
 
         <!-- ── Financial ──────────────────────────────── -->
         <div class="mb-2">
-          <p class="fw-semibold text-uppercase small text-secondary mb-2" style="letter-spacing:.05em;">Financial</p>
+          <p class="section-header">Financial</p>
 
           <div class="slider-wrap">
             <div class="slider-label">Price range ($)</div>
@@ -148,7 +168,7 @@
 
         <!-- ── Exclusions ─────────────────────────────── -->
         <div class="mb-2">
-          <p class="fw-semibold text-uppercase small text-secondary mb-2" style="letter-spacing:.05em;">Exclusions</p>
+          <p class="section-header">Exclusions</p>
 
           <div class="mb-2">
             <label class="slider-label">Exclude symbols</label>
@@ -173,7 +193,7 @@
         </div>
 
         <!-- Disclaimer -->
-        <div class="mt-3 p-2 bg-light border rounded small text-muted" style="font-size:0.7rem;">
+        <div class="disclaimer">
           <strong>Disclaimer:</strong> The information provided by Divifilter is for informational purposes only and
           should not be considered as financial advice. Divifilter is not affiliated with any financial institution
           or investment company. The accuracy of the data cannot be guaranteed and is subject to change without notice.
@@ -185,14 +205,16 @@
 
     <!-- Main content -->
     <div class="col-md-9 col-lg-10 p-3">
-      <div class="d-flex align-items-center mb-3 gap-2">
-        <h4 class="mb-0">Results</h4>
-        <span id="spinner" class="spinner-border spinner-border-sm text-primary ms-2" role="status"></span>
-      </div>
-      <div id="results">
-        <p class="text-muted small mb-2">{{ row_count }} stock(s) found</p>
-        <div class="table-responsive">
-          {{ table_html | safe }}
+      <div class="results-card">
+        <div class="d-flex align-items-center mb-3 gap-2">
+          <h4 class="mb-0">Results</h4>
+          <span id="spinner" class="spinner-border spinner-border-sm text-primary ms-2" role="status"></span>
+        </div>
+        <div id="results">
+          <p class="small mb-2" style="color:#8b949e;">{{ row_count }} stock(s) found</p>
+          <div class="table-responsive">
+            {{ table_html | safe }}
+          </div>
         </div>
       </div>
     </div>
