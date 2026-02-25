@@ -56,12 +56,12 @@
     .sidebar::-webkit-scrollbar-thumb { background: #30363d; border-radius: 3px; }
     .sidebar::-webkit-scrollbar-thumb:hover { background: #4a9eff; }
     /* Table scrollbar */
-    .table-responsive::-webkit-scrollbar { width: 5px; height: 5px; }
-    .table-responsive::-webkit-scrollbar-track { background: transparent; }
-    .table-responsive::-webkit-scrollbar-thumb { background: #30363d; border-radius: 3px; }
+    .table-responsive::-webkit-scrollbar { width: 8px; height: 8px; }
+    .table-responsive::-webkit-scrollbar-track { background: #161b22; }
+    .table-responsive::-webkit-scrollbar-thumb { background: #30363d; border-radius: 4px; }
     .table-responsive::-webkit-scrollbar-thumb:hover { background: #4a9eff; }
     /* Table dark polish */
-    .table-responsive { flex: 1; min-height: 0; overflow-y: auto; }
+    .table-responsive { flex: 1; min-height: 0; max-height: calc(100vh - 10rem); overflow: auto; }
     .table-dark { --bs-table-border-color: #30363d; }
     .table-dark thead th {
       position: sticky; top: 0; z-index: 2;
