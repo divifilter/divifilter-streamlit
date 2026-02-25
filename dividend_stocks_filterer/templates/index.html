@@ -33,7 +33,20 @@
     .slider-label { font-size: 0.8rem; font-weight: 500; margin-bottom: 4px; color: #8b949e; }
     .slider-label[data-bs-toggle="tooltip"] { cursor: help; }
     .slider-wrap { margin-bottom: 1.1rem; }
-    .slider-value { font-size: 0.72rem; color: #4a9eff; margin-top: 5px; text-align: right; font-family: monospace; }
+    .slider-value { font-size: 0.72rem; color: #4a9eff; margin-top: 5px; text-align: right; font-family: monospace; cursor: pointer; }
+    .slider-value:hover { color: #7ab8ff; }
+    .slider-edit-input {
+      width: 55px;
+      background: #13161d;
+      color: #4a9eff;
+      border: 1px solid #4a9eff;
+      border-radius: 3px;
+      font-family: monospace;
+      font-size: 0.72rem;
+      text-align: center;
+      padding: 0 2px;
+      outline: none;
+    }
     /* Section headers */
     .section-header {
       font-size: 0.7rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
@@ -138,7 +151,7 @@
             <div class="slider-label" data-bs-toggle="tooltip" data-bs-placement="right" title="Choose the minimum number of consecutive years a stock has paid dividends. 5+ = Challengers, 10+ = Contenders, 25+ = Aristocrats.">Min streak years</div>
             <div id="sl-streak"></div>
             <input type="hidden" name="min_streak_years" id="v-streak" value="{{ ranges.streak_default }}">
-            <div class="slider-value" id="lbl-streak">{{ ranges.streak_default }} yr</div>
+            <div class="slider-value" id="lbl-streak" data-slider="sl-streak" data-handles="1">{{ ranges.streak_default }} yr</div>
           </div>
 
           <div class="slider-wrap">
@@ -146,21 +159,21 @@
             <div id="sl-yield"></div>
             <input type="hidden" name="yield_range_min" id="v-yield-min" value="0">
             <input type="hidden" name="yield_range_max" id="v-yield-max" value="{{ ranges.yield_max }}">
-            <div class="slider-value" id="lbl-yield">0 – {{ ranges.yield_max }}%</div>
+            <div class="slider-value" id="lbl-yield" data-slider="sl-yield" data-handles="2">0 – {{ ranges.yield_max }}%</div>
           </div>
 
           <div class="slider-wrap">
             <div class="slider-label" data-bs-toggle="tooltip" data-bs-placement="right" title="Filters the Dividend Growth Rate across 1, 3, 5 &amp; 10 years (where available).">Min DGR (%)</div>
             <div id="sl-dgr"></div>
             <input type="hidden" name="min_dgr" id="v-dgr" value="0">
-            <div class="slider-value" id="lbl-dgr">0%</div>
+            <div class="slider-value" id="lbl-dgr" data-slider="sl-dgr" data-handles="1">0%</div>
           </div>
 
           <div class="slider-wrap">
             <div class="slider-label" data-bs-toggle="tooltip" data-bs-placement="right" title="Chowder number = dividend yield + DGR. A value of 12+ is generally considered strong. Higher is better.">Min Chowder number</div>
             <div id="sl-chowder"></div>
             <input type="hidden" name="chowder_number" id="v-chowder" value="0">
-            <div class="slider-value" id="lbl-chowder">0</div>
+            <div class="slider-value" id="lbl-chowder" data-slider="sl-chowder" data-handles="1">0</div>
           </div>
         </div>
 
@@ -173,42 +186,42 @@
             <div id="sl-price"></div>
             <input type="hidden" name="price_range_min" id="v-price-min" value="1">
             <input type="hidden" name="price_range_max" id="v-price-max" value="{{ ranges.price_max }}">
-            <div class="slider-value" id="lbl-price">$1 – ${{ ranges.price_max }}</div>
+            <div class="slider-value" id="lbl-price" data-slider="sl-price" data-handles="2">$1 – ${{ ranges.price_max }}</div>
           </div>
 
           <div class="slider-wrap">
             <div class="slider-label" data-bs-toggle="tooltip" data-bs-placement="right" title="0% = fairly valued, &gt;0% = overvalued, &lt;0% = undervalued. Set lower to find undervalued stocks.">Max fair value (%)</div>
             <div id="sl-fv"></div>
             <input type="hidden" name="fair_value" id="v-fv" value="{{ ranges.fv_max }}">
-            <div class="slider-value" id="lbl-fv">{{ ranges.fv_max }}%</div>
+            <div class="slider-value" id="lbl-fv" data-slider="sl-fv" data-handles="1">{{ ranges.fv_max }}%</div>
           </div>
 
           <div class="slider-wrap">
             <div class="slider-label" data-bs-toggle="tooltip" data-bs-placement="right" title="Filters to companies whose revenues have grown at or above the given value over the past year.">Min revenue growth 1Y</div>
             <div id="sl-revenue"></div>
             <input type="hidden" name="min_revenue" id="v-revenue" value="0">
-            <div class="slider-value" id="lbl-revenue">0</div>
+            <div class="slider-value" id="lbl-revenue" data-slider="sl-revenue" data-handles="1">0</div>
           </div>
 
           <div class="slider-wrap">
             <div class="slider-label" data-bs-toggle="tooltip" data-bs-placement="right" title="Net Profit Margin = earnings after taxes ÷ net revenue × 100%. Higher means more profit available to shareholders.">Min NPM (%)</div>
             <div id="sl-npm"></div>
             <input type="hidden" name="min_npm" id="v-npm" value="0">
-            <div class="slider-value" id="lbl-npm">0%</div>
+            <div class="slider-value" id="lbl-npm" data-slider="sl-npm" data-handles="1">0%</div>
           </div>
 
           <div class="slider-wrap">
             <div class="slider-label" data-bs-toggle="tooltip" data-bs-placement="right" title="Cash Flow per Share = (after-tax earnings + depreciation) ÷ shares. A measure of financial strength; often preferred over EPS.">Min CF/Share</div>
             <div id="sl-cf"></div>
             <input type="hidden" name="min_cf_per_share" id="v-cf" value="0">
-            <div class="slider-value" id="lbl-cf">0</div>
+            <div class="slider-value" id="lbl-cf" data-slider="sl-cf" data-handles="1">0</div>
           </div>
 
           <div class="slider-wrap">
             <div class="slider-label" data-bs-toggle="tooltip" data-bs-placement="right" title="Return on Equity = net income ÷ total equity. Filters to companies with ROE at or above the given value.">Min ROE</div>
             <div id="sl-roe"></div>
             <input type="hidden" name="min_roe" id="v-roe" value="0">
-            <div class="slider-value" id="lbl-roe">0</div>
+            <div class="slider-value" id="lbl-roe" data-slider="sl-roe" data-handles="1">0</div>
           </div>
 
           <div class="slider-wrap">
@@ -216,21 +229,21 @@
             <div id="sl-pe"></div>
             <input type="hidden" name="pe_range_min" id="v-pe-min" value="{{ ranges.pe_min }}">
             <input type="hidden" name="pe_range_max" id="v-pe-max" value="{{ ranges.pe_max }}">
-            <div class="slider-value" id="lbl-pe">{{ ranges.pe_min }} – {{ ranges.pe_max }}</div>
+            <div class="slider-value" id="lbl-pe" data-slider="sl-pe" data-handles="2">{{ ranges.pe_min }} – {{ ranges.pe_max }}</div>
           </div>
 
           <div class="slider-wrap">
             <div class="slider-label" data-bs-toggle="tooltip" data-bs-placement="right" title="Price-to-Book Value. Lower values generally indicate better cost-to-value ratio.">Max P/BV</div>
             <div id="sl-pbv"></div>
             <input type="hidden" name="max_price_per_book_value" id="v-pbv" value="{{ ranges.pbv_max }}">
-            <div class="slider-value" id="lbl-pbv">{{ ranges.pbv_max }}</div>
+            <div class="slider-value" id="lbl-pbv" data-slider="sl-pbv" data-handles="1">{{ ranges.pbv_max }}</div>
           </div>
 
           <div class="slider-wrap">
             <div class="slider-label" data-bs-toggle="tooltip" data-bs-placement="right" title="Debt-to-capital ratio. Investors often prefer under 0.6 (60%), though up to 0.8 can be acceptable for growing companies.">Max Debt/Capital</div>
             <div id="sl-debt"></div>
             <input type="hidden" name="max_debt_per_capital_value" id="v-debt" value="{{ ranges.debt_max }}">
-            <div class="slider-value" id="lbl-debt">{{ ranges.debt_max }}</div>
+            <div class="slider-value" id="lbl-debt" data-slider="sl-debt" data-handles="1">{{ ranges.debt_max }}</div>
           </div>
         </div>
 
@@ -393,6 +406,78 @@
   dual(  'sl-pe',      'v-pe-min', 'v-pe-max',    'lbl-pe',  r.pe_min, r.pe_max, r.pe_min, r.pe_max, 0.5, plain2);
   single('sl-pbv',     'v-pbv',     'lbl-pbv',     r.pbv_min, r.pbv_max, r.pbv_max, 0.1, plain);
   single('sl-debt',    'v-debt',    'lbl-debt',    0, r.debt_max, r.debt_max, 0.01, plain);
+
+  // ── Click-to-type on slider value labels ──────────────────────────────────
+  document.querySelectorAll('.slider-value[data-slider]').forEach(function(lbl) {
+    lbl.addEventListener('click', function() {
+      if (lbl.querySelector('input')) return;
+
+      var sliderEl = document.getElementById(lbl.dataset.slider);
+      var handles = parseInt(lbl.dataset.handles);
+      var vals = sliderEl.noUiSlider.get();
+      var originalText = lbl.textContent;
+
+      function makeInput(val) {
+        var inp = document.createElement('input');
+        inp.type = 'number';
+        inp.value = parseFloat(val);
+        inp.className = 'slider-edit-input';
+        return inp;
+      }
+
+      lbl.textContent = '';
+
+      if (handles === 1) {
+        var inp = makeInput(vals);
+        lbl.appendChild(inp);
+        inp.focus(); inp.select();
+
+        function commit() {
+          var v = parseFloat(inp.value);
+          if (!isNaN(v)) {
+            sliderEl.noUiSlider.set(v);
+          } else {
+            lbl.textContent = originalText;
+          }
+        }
+
+        inp.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter') { e.preventDefault(); commit(); }
+          if (e.key === 'Escape') { lbl.textContent = originalText; }
+        });
+        inp.addEventListener('blur', commit);
+
+      } else {
+        var loInp = makeInput(vals[0]);
+        var hiInp = makeInput(vals[1]);
+        lbl.appendChild(loInp);
+        lbl.appendChild(document.createTextNode(' – '));
+        lbl.appendChild(hiInp);
+        loInp.focus(); loInp.select();
+
+        function commitDual() {
+          setTimeout(function() {
+            if (lbl.contains(document.activeElement)) return;
+            var lo = parseFloat(loInp.value);
+            var hi = parseFloat(hiInp.value);
+            if (!isNaN(lo) && !isNaN(hi)) {
+              sliderEl.noUiSlider.set([lo, hi]);
+            } else {
+              lbl.textContent = originalText;
+            }
+          }, 0);
+        }
+
+        [loInp, hiInp].forEach(function(inp) {
+          inp.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') { e.preventDefault(); commitDual(); inp.blur(); }
+            if (e.key === 'Escape') { lbl.textContent = originalText; }
+          });
+          inp.addEventListener('blur', commitDual);
+        });
+      }
+    });
+  });
 
   // ── Tom Select multiselects ────────────────────────────────────────────────
   ['sel-symbols', 'sel-sectors', 'sel-industries'].forEach(function (id) {
