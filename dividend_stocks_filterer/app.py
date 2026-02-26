@@ -25,37 +25,31 @@ db = MysqlConnection(
     db_user=configuration["db_user"]
 )
 
+_raw = db.min_max_all_values()
 ranges = {
     # Dividend section
     "streak_default": 5,
-    "yield_max": min(max(db.min_max_value_of_any_stock_key("Div Yield", "max"),
-                         db.min_max_value_of_any_stock_key("5Y Avg Yield", "max")), 25.0),
-    "dgr_min": max(min(db.min_max_value_of_any_stock_key("DGR 1Y", "min"),
-                       db.min_max_value_of_any_stock_key("DGR 3Y", "min"),
-                       db.min_max_value_of_any_stock_key("DGR 5Y", "min"),
-                       db.min_max_value_of_any_stock_key("DGR 10Y", "min")), -25.0),
-    "dgr_max": min(max(db.min_max_value_of_any_stock_key("DGR 1Y", "max"),
-                       db.min_max_value_of_any_stock_key("DGR 3Y", "max"),
-                       db.min_max_value_of_any_stock_key("DGR 5Y", "max"),
-                       db.min_max_value_of_any_stock_key("DGR 10Y", "max")), 25.0),
-    "chowder_max": int(min(db.min_max_value_of_any_stock_key("Chowder Number", "max"), 25.0)),
+    "yield_max": min(max(_raw['yield_max_raw'], _raw['5y_yield_max']), 25.0),
+    "dgr_min": max(min(_raw['dgr1y_min'], _raw['dgr3y_min'], _raw['dgr5y_min'], _raw['dgr10y_min']), -25.0),
+    "dgr_max": min(max(_raw['dgr1y_max'], _raw['dgr3y_max'], _raw['dgr5y_max'], _raw['dgr10y_max']), 25.0),
+    "chowder_max": int(min(_raw['chowder_max_raw'], 25.0)),
     # Financial section
-    "price_max": db.min_max_value_of_any_stock_key("Price", "max"),
-    "fv_min": int(max(db.min_max_value_of_any_stock_key("FV %", "min"), -25.0)),
-    "fv_max": int(max(db.min_max_value_of_any_stock_key("FV %", "max"), 0.0)),
-    "revenue_min": db.min_max_value_of_any_stock_key("Revenue 1Y", "min"),
-    "revenue_max": db.min_max_value_of_any_stock_key("Revenue 1Y", "max"),
-    "npm_min": db.min_max_value_of_any_stock_key("NPM", "min"),
-    "npm_max": db.min_max_value_of_any_stock_key("NPM", "max"),
-    "cf_min": db.min_max_value_of_any_stock_key("CF/Share", "min"),
-    "cf_max": db.min_max_value_of_any_stock_key("CF/Share", "max"),
-    "roe_min": db.min_max_value_of_any_stock_key("ROE", "min"),
-    "roe_max": db.min_max_value_of_any_stock_key("ROE", "max"),
-    "pe_min": max(db.min_max_value_of_any_stock_key("P/E", "min"), -50.0),
-    "pe_max": min(db.min_max_value_of_any_stock_key("P/E", "max"), 100.0),
-    "pbv_min": db.min_max_value_of_any_stock_key("P/BV", "min"),
-    "pbv_max": db.min_max_value_of_any_stock_key("P/BV", "max"),
-    "debt_max": db.min_max_value_of_any_stock_key("Debt/Capital", "max"),
+    "price_max": _raw['price_max_raw'],
+    "fv_min": int(max(_raw['fv_min_raw'], -25.0)),
+    "fv_max": int(max(_raw['fv_max_raw'], 0.0)),
+    "revenue_min": _raw['revenue_min'],
+    "revenue_max": _raw['revenue_max'],
+    "npm_min": _raw['npm_min'],
+    "npm_max": _raw['npm_max'],
+    "cf_min": _raw['cf_min'],
+    "cf_max": _raw['cf_max'],
+    "roe_min": _raw['roe_min'],
+    "roe_max": _raw['roe_max'],
+    "pe_min": max(_raw['pe_min_raw'], -50.0),
+    "pe_max": min(_raw['pe_max_raw'], 100.0),
+    "pbv_min": _raw['pbv_min'],
+    "pbv_max": _raw['pbv_max'],
+    "debt_max": _raw['debt_max_raw'],
     # Exclusion options
     "symbols": db.list_values_of_key_in_db("Symbol"),
     "sectors": db.list_values_of_key_in_db("Sector"),
@@ -75,20 +69,9 @@ async def health():
 @app.get("/", response_class=HTMLResponse)
 async def index(request: Request):
     db_update_dates = await run_in_threadpool(db.check_db_update_dates)
-    initial_df = radar_dict_to_table(await run_in_threadpool(
-        db.run_filter_query,
-        ranges["streak_default"], 0.0, ranges["yield_max"], 0.0, 0,
-        1.0, ranges["price_max"], ranges["fv_max"], 0.0, 0.0, 0.0, 0.0,
-        ranges["pe_min"], ranges["pe_max"], ranges["pbv_max"],
-        ranges["debt_max"], [], [], []
-    ))
     return templates.TemplateResponse(request, "index.html", {
         "ranges": ranges,
         "db_update_dates": db_update_dates,
-        "table_html": initial_df.to_html(
-            classes="table table-striped table-hover table-sm", border=0, index=True
-        ),
-        "row_count": len(initial_df),
     })
 
 

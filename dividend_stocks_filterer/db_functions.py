@@ -88,6 +88,50 @@ class MysqlConnection:
 
         return result
 
+    def min_max_all_values(self) -> dict:
+        """
+        Fetches all min/max aggregate values needed for slider ranges in a single SQL query.
+
+        Returns:
+            dict: A dictionary mapping internal keys to their raw min/max DB values.
+        """
+        query = """
+            SELECT
+                MAX(`Div Yield`), MAX(`5Y Avg Yield`),
+                MIN(`DGR 1Y`), MAX(`DGR 1Y`),
+                MIN(`DGR 3Y`), MAX(`DGR 3Y`),
+                MIN(`DGR 5Y`), MAX(`DGR 5Y`),
+                MIN(`DGR 10Y`), MAX(`DGR 10Y`),
+                MAX(`Chowder Number`),
+                MAX(`Price`),
+                MIN(`FV %`), MAX(`FV %`),
+                MIN(`Revenue 1Y`), MAX(`Revenue 1Y`),
+                MIN(`NPM`), MAX(`NPM`),
+                MIN(`CF/Share`), MAX(`CF/Share`),
+                MIN(`ROE`), MAX(`ROE`),
+                MIN(`P/E`), MAX(`P/E`),
+                MIN(`P/BV`), MAX(`P/BV`),
+                MAX(`Debt/Capital`)
+            FROM dividend_data_table
+            WHERE `Div Yield` IS NOT NULL;
+        """
+        row = self.run_sql_query(query)[0]
+        keys = [
+            'yield_max_raw', '5y_yield_max',
+            'dgr1y_min', 'dgr1y_max', 'dgr3y_min', 'dgr3y_max',
+            'dgr5y_min', 'dgr5y_max', 'dgr10y_min', 'dgr10y_max',
+            'chowder_max_raw', 'price_max_raw',
+            'fv_min_raw', 'fv_max_raw',
+            'revenue_min', 'revenue_max',
+            'npm_min', 'npm_max',
+            'cf_min', 'cf_max',
+            'roe_min', 'roe_max',
+            'pe_min_raw', 'pe_max_raw',
+            'pbv_min', 'pbv_max',
+            'debt_max_raw',
+        ]
+        return dict(zip(keys, row))
+
     def list_values_of_key_in_db(self, key_to_list: str) -> list:
         """
         Retrieve a list of tickers from the 'dividend_data_table' in the database.
