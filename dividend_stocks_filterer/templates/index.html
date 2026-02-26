@@ -16,31 +16,86 @@
   <!-- Tom Select -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.bootstrap5.min.css">
   <style>
+    /* ── Theme variables ─────────────────────────────────────────────────── */
+    :root {
+      --df-bg: #0d1117;
+      --df-surface: #161b22;
+      --df-surface-2: #21262d;
+      --df-border: #30363d;
+      --df-input-bg: #13161d;
+      --df-dropdown-bg: #1c2128;
+      --df-dropdown-active: #2d333b;
+      --df-slider-handle: #1f2937;
+      --df-accent: #4a9eff;
+      --df-accent-hover: #7ab8ff;
+      --df-text: #e6edf3;
+      --df-text-muted: #8b949e;
+      --df-text-dimmed: #6e7681;
+      --df-hover-bg: rgba(74, 158, 255, 0.2);
+      --df-hover-th: #1e314a;
+    }
+    [data-bs-theme="light"] {
+      --df-bg: #f6f8fa;
+      --df-surface: #ffffff;
+      --df-surface-2: #f0f2f5;
+      --df-border: #d0d7de;
+      --df-input-bg: #f6f8fa;
+      --df-dropdown-bg: #ffffff;
+      --df-dropdown-active: #e8ecf0;
+      --df-slider-handle: #ffffff;
+      --df-accent: #0969da;
+      --df-accent-hover: #0550ae;
+      --df-text: #1f2328;
+      --df-text-muted: #656d76;
+      --df-text-dimmed: #8c959f;
+      --df-hover-bg: rgba(9, 105, 218, 0.1);
+      --df-hover-th: #ddf4ff;
+    }
+
     html { height: 100%; }
-    body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background-color: #0d1117; overflow: hidden; height: 100%; }
+    body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background-color: var(--df-bg); overflow: hidden; height: 100%; }
     .container-fluid { height: calc(100vh - 1.5rem); }
     .container-fluid > .row { height: 100%; }
     #main-col { display: flex; flex-direction: column; min-height: 0; overflow: hidden; }
-    .sidebar {
-      position: sticky; top: 0; height: 100vh; overflow-y: auto;
-      background-color: #161b22;
+
+    /* ── Sidebar ───────────────────────────────────────────────────────── */
+    .sidebar { --bs-offcanvas-bg: var(--df-surface); }
+    @media (min-width: 768px) {
+      .sidebar {
+        position: sticky !important; top: 0; height: 100vh; overflow-y: auto;
+        background-color: var(--df-surface) !important;
+      }
+      .sidebar::-webkit-scrollbar { width: 5px; }
+      .sidebar::-webkit-scrollbar-track { background: transparent; }
+      .sidebar::-webkit-scrollbar-thumb { background: var(--df-border); border-radius: 3px; }
+      .sidebar::-webkit-scrollbar-thumb:hover { background: var(--df-accent); }
     }
-    /* noUiSlider dark overrides */
-    .noUi-target { background: #21262d; border-color: #30363d; box-shadow: none; }
-    .noUi-handle { background: #1f2937; border-color: #4a9eff; box-shadow: none; cursor: pointer; }
-    .noUi-handle::before, .noUi-handle::after { background: #4a9eff; }
-    .noUi-connect { background: #4a9eff; }
-    /* Labels & values */
-    .slider-label { font-size: 0.8rem; font-weight: 500; margin-bottom: 4px; color: #8b949e; }
+
+    /* ── Mobile overrides ──────────────────────────────────────────────── */
+    @media (max-width: 767.98px) {
+      body { overflow: auto; height: auto; }
+      .container-fluid { height: auto; }
+      #main-col { overflow: visible; }
+      .table-responsive { max-height: none; }
+    }
+
+    /* ── noUiSlider overrides ──────────────────────────────────────────── */
+    .noUi-target { background: var(--df-surface-2); border-color: var(--df-border); box-shadow: none; }
+    .noUi-handle { background: var(--df-slider-handle); border-color: var(--df-accent); box-shadow: none; cursor: pointer; }
+    .noUi-handle::before, .noUi-handle::after { background: var(--df-accent); }
+    .noUi-connect { background: var(--df-accent); }
+
+    /* ── Labels & values ───────────────────────────────────────────────── */
+    .slider-label { font-size: 0.8rem; font-weight: 500; margin-bottom: 4px; color: var(--df-text-muted); }
     .slider-label[data-bs-toggle="tooltip"] { cursor: help; }
     .slider-wrap { margin-bottom: 1.1rem; }
-    .slider-value { font-size: 0.72rem; color: #4a9eff; margin-top: 5px; text-align: right; font-family: monospace; cursor: pointer; }
-    .slider-value:hover { color: #7ab8ff; }
+    .slider-value { font-size: 0.72rem; color: var(--df-accent); margin-top: 5px; text-align: right; font-family: monospace; cursor: pointer; }
+    .slider-value:hover { color: var(--df-accent-hover); }
     .slider-edit-input {
       width: 55px;
-      background: #13161d;
-      color: #4a9eff;
-      border: 1px solid #4a9eff;
+      background: var(--df-input-bg);
+      color: var(--df-accent);
+      border: 1px solid var(--df-accent);
       border-radius: 3px;
       font-family: monospace;
       font-size: 0.72rem;
@@ -48,260 +103,357 @@
       padding: 0 2px;
       outline: none;
     }
-    /* Section headers */
+
+    /* ── Section headers (collapsible) ─────────────────────────────────── */
     .section-header {
       font-size: 0.7rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
-      color: #8b949e; border-left: 2px solid #4a9eff; padding-left: 6px; margin-bottom: 10px;
+      color: var(--df-text-muted); border-left: 2px solid var(--df-accent); padding-left: 6px; margin-bottom: 10px;
+      cursor: pointer; display: flex; align-items: center; justify-content: space-between;
     }
-    /* Spinner */
+    .section-header:hover { color: var(--df-text); }
+    .section-header .chevron {
+      transition: transform 0.2s ease;
+      font-size: 0.6rem;
+      opacity: 0.6;
+    }
+    .section-header.collapsed .chevron { transform: rotate(-90deg); }
+
+    /* ── Spinner ────────────────────────────────────────────────────────── */
     #spinner { display: none; }
     .htmx-request #spinner { display: inline-block; }
-    /* Results card */
-    .results-card { background: #161b22; border: 1px solid #21262d; border-radius: 8px; padding: 1rem; flex: 1; display: flex; flex-direction: column; min-height: 0; }
+
+    /* ── Results card ──────────────────────────────────────────────────── */
+    .results-card { background: var(--df-surface); border: 1px solid var(--df-surface-2); border-radius: 8px; padding: 1rem; flex: 1; display: flex; flex-direction: column; min-height: 0; position: relative; }
     #results { flex: 1; display: flex; flex-direction: column; min-height: 0; }
-    /* Disclaimer */
+
+    /* ── Disclaimer ────────────────────────────────────────────────────── */
     .disclaimer {
-      background-color: #161b22; border: 1px solid #21262d; border-radius: 6px;
-      color: #6e7681; font-size: 0.68rem; padding: 0.5rem 0.6rem; margin-top: 1rem;
+      background-color: var(--df-surface); border: 1px solid var(--df-surface-2); border-radius: 6px;
+      color: var(--df-text-dimmed); font-size: 0.68rem; padding: 0.5rem 0.6rem; margin-top: 1rem;
       line-height: 1.5;
     }
-    /* Sidebar scrollbar */
-    .sidebar::-webkit-scrollbar { width: 5px; }
-    .sidebar::-webkit-scrollbar-track { background: transparent; }
-    .sidebar::-webkit-scrollbar-thumb { background: #30363d; border-radius: 3px; }
-    .sidebar::-webkit-scrollbar-thumb:hover { background: #4a9eff; }
-    /* Table scrollbar */
+
+    /* ── Table scrollbar ───────────────────────────────────────────────── */
     .table-responsive::-webkit-scrollbar { width: 8px; height: 8px; }
-    .table-responsive::-webkit-scrollbar-track { background: #161b22; }
-    .table-responsive::-webkit-scrollbar-thumb { background: #30363d; border-radius: 4px; }
-    .table-responsive::-webkit-scrollbar-thumb:hover { background: #4a9eff; }
-    /* Table dark polish */
+    .table-responsive::-webkit-scrollbar-track { background: var(--df-surface); }
+    .table-responsive::-webkit-scrollbar-thumb { background: var(--df-border); border-radius: 4px; }
+    .table-responsive::-webkit-scrollbar-thumb:hover { background: var(--df-accent); }
+
+    /* ── Table styling (replaces .table-dark selectors) ────────────────── */
     .table-responsive { flex: 1; min-height: 0; max-height: calc(100vh - 10rem); overflow: auto; }
-    .table-dark { --bs-table-border-color: #30363d; }
-    .table-dark thead th {
+    #results .table { --bs-table-border-color: var(--df-border); --bs-table-bg: var(--df-surface); --bs-table-color: var(--df-text); --bs-table-striped-bg: var(--df-surface-2); --bs-table-striped-color: var(--df-text); }
+    #results .table thead th {
       position: sticky; top: 0; z-index: 2;
-      background-color: #0d1117 !important;
-      border-bottom: 2px solid #4a9eff;
-      font-size: 0.72rem; letter-spacing: 0.05em; text-transform: uppercase; color: #8b949e;
+      background-color: var(--df-bg) !important;
+      border-bottom: 2px solid var(--df-accent);
+      font-size: 0.72rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--df-text-muted);
+      cursor: pointer; user-select: none; white-space: nowrap;
     }
-    .table-dark thead th:first-child { left: 0; z-index: 3; }
-    .table-dark tbody th {
+    #results .table thead th:first-child { left: 0; z-index: 3; }
+    #results .table tbody th {
       position: sticky; left: 0; z-index: 1;
-      background-color: #13161d;
-      border-right: 1px solid #30363d;
+      background-color: var(--df-input-bg);
+      border-right: 1px solid var(--df-border);
       font-weight: 600; white-space: nowrap;
-      overflow: hidden;
+      overflow: hidden; color: var(--df-text);
     }
-    .table-dark tbody td { font-size: 0.82rem; vertical-align: middle; }
-    .table-dark {
-      --bs-table-hover-bg: rgba(74, 158, 255, 0.2);
-      --bs-table-hover-color: #e6edf3;
+    #results .table tbody td { font-size: 0.82rem; vertical-align: middle; }
+    #results .table {
+      --bs-table-hover-bg: var(--df-hover-bg);
+      --bs-table-hover-color: var(--df-text);
     }
-    .table-dark.table-hover tbody tr:hover th {
-      background-color: #1e314a !important;
-      color: #e6edf3;
+    #results .table.table-hover tbody tr:hover th {
+      background-color: var(--df-hover-th) !important;
+      color: var(--df-text);
     }
-    /* Tom Select dark theme overrides */
+
+    /* ── Sortable column headers ────────────────────────────────────────── */
+    .sort-icon { margin-left: 4px; opacity: 0.35; font-style: normal; }
+    #results .table thead th.sort-asc  .sort-icon,
+    #results .table thead th.sort-desc .sort-icon { opacity: 1; color: var(--df-accent); }
+
+    /* ── Tom Select overrides ──────────────────────────────────────────── */
     .ts-dropdown {
-      background-color: #1c2128;
-      border: 1px solid #30363d;
-      color: #e6edf3;
+      background-color: var(--df-dropdown-bg);
+      border: 1px solid var(--df-border);
+      color: var(--df-text);
     }
-    .ts-dropdown .option {
-      color: #e6edf3;
-    }
+    .ts-dropdown .option { color: var(--df-text); }
     .ts-dropdown .option.active {
-      background-color: #2d333b;
-      color: #ffffff;
+      background-color: var(--df-dropdown-active);
+      color: var(--df-text);
     }
     .ts-control {
-      background-color: #13161d;
-      border: 1px solid #30363d;
-      color: #e6edf3;
+      background-color: var(--df-input-bg);
+      border: 1px solid var(--df-border);
+      color: var(--df-text);
     }
-    .ts-control input {
-      color: #e6edf3;
+    .ts-control input { color: var(--df-text); }
+
+    /* ── Skeleton loading ──────────────────────────────────────────────── */
+    .skeleton-overlay {
+      display: none;
+      position: absolute; top: 3.5rem; left: 1rem; right: 1rem; bottom: 1rem;
+      z-index: 10;
+      padding: 0.5rem;
     }
-    /* Sortable column headers */
-    .table-dark thead th { cursor: pointer; user-select: none; white-space: nowrap; }
-    .sort-icon { margin-left: 4px; opacity: 0.35; font-style: normal; }
-    .table-dark thead th.sort-asc  .sort-icon,
-    .table-dark thead th.sort-desc .sort-icon { opacity: 1; color: #4a9eff; }
+    .skeleton-bar {
+      height: 1.2rem;
+      border-radius: 4px;
+      margin-bottom: 0.6rem;
+      background: linear-gradient(90deg, var(--df-surface-2) 25%, var(--df-border) 50%, var(--df-surface-2) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+    }
+    .skeleton-header { height: 1.6rem; width: 60%; margin-bottom: 1rem; }
+    @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+    .results-dimmed { opacity: 0.3; pointer-events: none; }
+
+    /* ── Theme toggle button ───────────────────────────────────────────── */
+    .theme-toggle {
+      background: none; border: 1px solid var(--df-border); border-radius: 6px;
+      padding: 4px 8px; cursor: pointer; color: var(--df-text-muted);
+      display: flex; align-items: center; transition: color 0.2s, border-color 0.2s;
+    }
+    .theme-toggle:hover { color: var(--df-accent); border-color: var(--df-accent); }
   </style>
 </head>
 <body>
 <div class="container-fluid py-3">
   <div class="row">
 
-    <!-- Sidebar -->
-    <div class="col-md-3 col-lg-2 sidebar p-3">
-      <h5 class="mb-1 fw-bold text-primary">Divifilter</h5>
-      <p class="text-muted small mb-3">
-        Data updated:
-        {{ db_update_dates.get("radar_file", "—") }} (DRIP) &amp;
-        {{ db_update_dates.get("yahoo_finance", "—") }} UTC (Yahoo)
-      </p>
+    <!-- Sidebar (offcanvas on mobile) -->
+    <div class="col-md-3 col-lg-2 offcanvas-md offcanvas-start sidebar p-0" id="sidebarOffcanvas">
+      <div class="offcanvas-header d-md-none border-bottom" style="border-color:var(--df-border);">
+        <h5 class="offcanvas-title fw-bold text-primary">Divifilter</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#sidebarOffcanvas" aria-label="Close"></button>
+      </div>
+      <div class="offcanvas-body p-3">
+        <h5 class="mb-1 fw-bold text-primary d-none d-md-block">Divifilter</h5>
+        <p class="text-muted small mb-3">
+          Data updated:
+          {{ db_update_dates.get("radar_file", "\u2014") }} (DRIP) &amp;
+          {{ db_update_dates.get("yahoo_finance", "\u2014") }} UTC (Yahoo)
+        </p>
 
-      <form id="filters"
-            hx-post="/filter"
-            hx-target="#results"
-            hx-trigger="change, input delay:400ms"
-            hx-swap="innerHTML"
-            hx-indicator="#spinner">
+        <form id="filters"
+              hx-post="/filter"
+              hx-target="#results"
+              hx-trigger="change, input delay:400ms"
+              hx-swap="innerHTML"
+              hx-indicator="#spinner">
 
-        <!-- ── Dividend ────────────────────────────────── -->
-        <div class="mb-2">
-          <p class="section-header">Dividend</p>
-
-          <div class="slider-wrap">
-            <div class="slider-label" data-bs-toggle="tooltip" data-bs-placement="right" title="Choose the minimum number of consecutive years a stock has paid dividends. 5+ = Challengers, 10+ = Contenders, 25+ = Aristocrats.">Min streak years</div>
-            <div id="sl-streak"></div>
-            <input type="hidden" name="min_streak_years" id="v-streak" value="{{ ranges.streak_default }}">
-            <div class="slider-value" id="lbl-streak" data-slider="sl-streak" data-handles="1">{{ ranges.streak_default }} yr</div>
-          </div>
-
-          <div class="slider-wrap">
-            <div class="slider-label" data-bs-toggle="tooltip" data-bs-placement="right" title="Filter stocks by dividend yield — the percentage of the stock&#39;s current value paid as dividends. Also filters by 5-year average yield.">Dividend yield range (%)</div>
-            <div id="sl-yield"></div>
-            <input type="hidden" name="yield_range_min" id="v-yield-min" value="0">
-            <input type="hidden" name="yield_range_max" id="v-yield-max" value="{{ ranges.yield_max }}">
-            <div class="slider-value" id="lbl-yield" data-slider="sl-yield" data-handles="2">0 – {{ ranges.yield_max }}%</div>
-          </div>
-
-          <div class="slider-wrap">
-            <div class="slider-label" data-bs-toggle="tooltip" data-bs-placement="right" title="Filters the Dividend Growth Rate across 1, 3, 5 &amp; 10 years (where available).">Min DGR (%)</div>
-            <div id="sl-dgr"></div>
-            <input type="hidden" name="min_dgr" id="v-dgr" value="0">
-            <div class="slider-value" id="lbl-dgr" data-slider="sl-dgr" data-handles="1">0%</div>
-          </div>
-
-          <div class="slider-wrap">
-            <div class="slider-label" data-bs-toggle="tooltip" data-bs-placement="right" title="Chowder number = dividend yield + DGR. A value of 12+ is generally considered strong. Higher is better.">Min Chowder number</div>
-            <div id="sl-chowder"></div>
-            <input type="hidden" name="chowder_number" id="v-chowder" value="0">
-            <div class="slider-value" id="lbl-chowder" data-slider="sl-chowder" data-handles="1">0</div>
-          </div>
-        </div>
-
-        <!-- ── Financial ──────────────────────────────── -->
-        <div class="mb-2">
-          <p class="section-header">Financial</p>
-
-          <div class="slider-wrap">
-            <div class="slider-label" data-bs-toggle="tooltip" data-bs-placement="right" title="Filter by minimum and maximum stock price.">Price range ($)</div>
-            <div id="sl-price"></div>
-            <input type="hidden" name="price_range_min" id="v-price-min" value="1">
-            <input type="hidden" name="price_range_max" id="v-price-max" value="{{ ranges.price_max }}">
-            <div class="slider-value" id="lbl-price" data-slider="sl-price" data-handles="2">$1 – ${{ ranges.price_max }}</div>
-          </div>
-
-          <div class="slider-wrap">
-            <div class="slider-label" data-bs-toggle="tooltip" data-bs-placement="right" title="0% = fairly valued, &gt;0% = overvalued, &lt;0% = undervalued. Set lower to find undervalued stocks.">Max fair value (%)</div>
-            <div id="sl-fv"></div>
-            <input type="hidden" name="fair_value" id="v-fv" value="{{ ranges.fv_max }}">
-            <div class="slider-value" id="lbl-fv" data-slider="sl-fv" data-handles="1">{{ ranges.fv_max }}%</div>
-          </div>
-
-          <div class="slider-wrap">
-            <div class="slider-label" data-bs-toggle="tooltip" data-bs-placement="right" title="Filters to companies whose revenues have grown at or above the given value over the past year.">Min revenue growth 1Y</div>
-            <div id="sl-revenue"></div>
-            <input type="hidden" name="min_revenue" id="v-revenue" value="0">
-            <div class="slider-value" id="lbl-revenue" data-slider="sl-revenue" data-handles="1">0</div>
-          </div>
-
-          <div class="slider-wrap">
-            <div class="slider-label" data-bs-toggle="tooltip" data-bs-placement="right" title="Net Profit Margin = earnings after taxes ÷ net revenue × 100%. Higher means more profit available to shareholders.">Min NPM (%)</div>
-            <div id="sl-npm"></div>
-            <input type="hidden" name="min_npm" id="v-npm" value="0">
-            <div class="slider-value" id="lbl-npm" data-slider="sl-npm" data-handles="1">0%</div>
-          </div>
-
-          <div class="slider-wrap">
-            <div class="slider-label" data-bs-toggle="tooltip" data-bs-placement="right" title="Cash Flow per Share = (after-tax earnings + depreciation) ÷ shares. A measure of financial strength; often preferred over EPS.">Min CF/Share</div>
-            <div id="sl-cf"></div>
-            <input type="hidden" name="min_cf_per_share" id="v-cf" value="0">
-            <div class="slider-value" id="lbl-cf" data-slider="sl-cf" data-handles="1">0</div>
-          </div>
-
-          <div class="slider-wrap">
-            <div class="slider-label" data-bs-toggle="tooltip" data-bs-placement="right" title="Return on Equity = net income ÷ total equity. Filters to companies with ROE at or above the given value.">Min ROE</div>
-            <div id="sl-roe"></div>
-            <input type="hidden" name="min_roe" id="v-roe" value="0">
-            <div class="slider-value" id="lbl-roe" data-slider="sl-roe" data-handles="1">0</div>
-          </div>
-
-          <div class="slider-wrap">
-            <div class="slider-label" data-bs-toggle="tooltip" data-bs-placement="right" title="Price-to-Earnings ratio. Negative = company losing money. Under 15 is often considered cheap, over 20 expensive.">P/E range</div>
-            <div id="sl-pe"></div>
-            <input type="hidden" name="pe_range_min" id="v-pe-min" value="{{ ranges.pe_min }}">
-            <input type="hidden" name="pe_range_max" id="v-pe-max" value="{{ ranges.pe_max }}">
-            <div class="slider-value" id="lbl-pe" data-slider="sl-pe" data-handles="2">{{ ranges.pe_min }} – {{ ranges.pe_max }}</div>
-          </div>
-
-          <div class="slider-wrap">
-            <div class="slider-label" data-bs-toggle="tooltip" data-bs-placement="right" title="Price-to-Book Value. Lower values generally indicate better cost-to-value ratio.">Max P/BV</div>
-            <div id="sl-pbv"></div>
-            <input type="hidden" name="max_price_per_book_value" id="v-pbv" value="{{ ranges.pbv_max }}">
-            <div class="slider-value" id="lbl-pbv" data-slider="sl-pbv" data-handles="1">{{ ranges.pbv_max }}</div>
-          </div>
-
-          <div class="slider-wrap">
-            <div class="slider-label" data-bs-toggle="tooltip" data-bs-placement="right" title="Debt-to-capital ratio. Investors often prefer under 0.6 (60%), though up to 0.8 can be acceptable for growing companies.">Max Debt/Capital</div>
-            <div id="sl-debt"></div>
-            <input type="hidden" name="max_debt_per_capital_value" id="v-debt" value="{{ ranges.debt_max }}">
-            <div class="slider-value" id="lbl-debt" data-slider="sl-debt" data-handles="1">{{ ranges.debt_max }}</div>
-          </div>
-        </div>
-
-        <!-- ── Exclusions ─────────────────────────────── -->
-        <div class="mb-2">
-          <p class="section-header">Exclusions</p>
-
+          <!-- ── Dividend ────────────────────────────────── -->
           <div class="mb-2">
-            <label class="slider-label" data-bs-toggle="tooltip" data-bs-placement="right" title="Exclude specific stocks from your results by ticker symbol.">Exclude symbols</label>
-            <select id="sel-symbols" name="excluded_symbols" multiple placeholder="Select symbols…">
-              {% for s in ranges.symbols %}<option value="{{ s }}">{{ s }}</option>{% endfor %}
-            </select>
+            <p class="section-header" data-bs-toggle="collapse" data-bs-target="#collapse-dividend">
+              <span>Dividend</span>
+              <span class="chevron">&#9660;</span>
+            </p>
+            <div class="collapse show" id="collapse-dividend">
+
+              <div class="slider-wrap">
+                <div class="slider-label" data-bs-toggle="tooltip" data-bs-placement="right" title="Choose the minimum number of consecutive years a stock has paid dividends. 5+ = Challengers, 10+ = Contenders, 25+ = Aristocrats.">Min streak years</div>
+                <div id="sl-streak"></div>
+                <input type="hidden" name="min_streak_years" id="v-streak" value="{{ ranges.streak_default }}">
+                <div class="slider-value" id="lbl-streak" data-slider="sl-streak" data-handles="1">{{ ranges.streak_default }} yr</div>
+              </div>
+
+              <div class="slider-wrap">
+                <div class="slider-label" data-bs-toggle="tooltip" data-bs-placement="right" title="Filter stocks by dividend yield — the percentage of the stock&#39;s current value paid as dividends. Also filters by 5-year average yield.">Dividend yield range (%)</div>
+                <div id="sl-yield"></div>
+                <input type="hidden" name="yield_range_min" id="v-yield-min" value="0">
+                <input type="hidden" name="yield_range_max" id="v-yield-max" value="{{ ranges.yield_max }}">
+                <div class="slider-value" id="lbl-yield" data-slider="sl-yield" data-handles="2">0 – {{ ranges.yield_max }}%</div>
+              </div>
+
+              <div class="slider-wrap">
+                <div class="slider-label" data-bs-toggle="tooltip" data-bs-placement="right" title="Filters the Dividend Growth Rate across 1, 3, 5 &amp; 10 years (where available).">Min DGR (%)</div>
+                <div id="sl-dgr"></div>
+                <input type="hidden" name="min_dgr" id="v-dgr" value="0">
+                <div class="slider-value" id="lbl-dgr" data-slider="sl-dgr" data-handles="1">0%</div>
+              </div>
+
+              <div class="slider-wrap">
+                <div class="slider-label" data-bs-toggle="tooltip" data-bs-placement="right" title="Chowder number = dividend yield + DGR. A value of 12+ is generally considered strong. Higher is better.">Min Chowder number</div>
+                <div id="sl-chowder"></div>
+                <input type="hidden" name="chowder_number" id="v-chowder" value="0">
+                <div class="slider-value" id="lbl-chowder" data-slider="sl-chowder" data-handles="1">0</div>
+              </div>
+            </div>
           </div>
 
+          <!-- ── Financial ──────────────────────────────── -->
           <div class="mb-2">
-            <label class="slider-label" data-bs-toggle="tooltip" data-bs-placement="right" title="Exclude all stocks from one or more sectors.">Exclude sectors</label>
-            <select id="sel-sectors" name="excluded_sectors" multiple placeholder="Select sectors…">
-              {% for s in ranges.sectors %}<option value="{{ s }}">{{ s }}</option>{% endfor %}
-            </select>
+            <p class="section-header" data-bs-toggle="collapse" data-bs-target="#collapse-financial">
+              <span>Financial</span>
+              <span class="chevron">&#9660;</span>
+            </p>
+            <div class="collapse show" id="collapse-financial">
+
+              <div class="slider-wrap">
+                <div class="slider-label" data-bs-toggle="tooltip" data-bs-placement="right" title="Filter by minimum and maximum stock price.">Price range ($)</div>
+                <div id="sl-price"></div>
+                <input type="hidden" name="price_range_min" id="v-price-min" value="1">
+                <input type="hidden" name="price_range_max" id="v-price-max" value="{{ ranges.price_max }}">
+                <div class="slider-value" id="lbl-price" data-slider="sl-price" data-handles="2">$1 – ${{ ranges.price_max }}</div>
+              </div>
+
+              <div class="slider-wrap">
+                <div class="slider-label" data-bs-toggle="tooltip" data-bs-placement="right" title="0% = fairly valued, &gt;0% = overvalued, &lt;0% = undervalued. Set lower to find undervalued stocks.">Max fair value (%)</div>
+                <div id="sl-fv"></div>
+                <input type="hidden" name="fair_value" id="v-fv" value="{{ ranges.fv_max }}">
+                <div class="slider-value" id="lbl-fv" data-slider="sl-fv" data-handles="1">{{ ranges.fv_max }}%</div>
+              </div>
+
+              <div class="slider-wrap">
+                <div class="slider-label" data-bs-toggle="tooltip" data-bs-placement="right" title="Filters to companies whose revenues have grown at or above the given value over the past year.">Min revenue growth 1Y</div>
+                <div id="sl-revenue"></div>
+                <input type="hidden" name="min_revenue" id="v-revenue" value="0">
+                <div class="slider-value" id="lbl-revenue" data-slider="sl-revenue" data-handles="1">0</div>
+              </div>
+
+              <div class="slider-wrap">
+                <div class="slider-label" data-bs-toggle="tooltip" data-bs-placement="right" title="Net Profit Margin = earnings after taxes ÷ net revenue × 100%. Higher means more profit available to shareholders.">Min NPM (%)</div>
+                <div id="sl-npm"></div>
+                <input type="hidden" name="min_npm" id="v-npm" value="0">
+                <div class="slider-value" id="lbl-npm" data-slider="sl-npm" data-handles="1">0%</div>
+              </div>
+
+              <div class="slider-wrap">
+                <div class="slider-label" data-bs-toggle="tooltip" data-bs-placement="right" title="Cash Flow per Share = (after-tax earnings + depreciation) ÷ shares. A measure of financial strength; often preferred over EPS.">Min CF/Share</div>
+                <div id="sl-cf"></div>
+                <input type="hidden" name="min_cf_per_share" id="v-cf" value="0">
+                <div class="slider-value" id="lbl-cf" data-slider="sl-cf" data-handles="1">0</div>
+              </div>
+
+              <div class="slider-wrap">
+                <div class="slider-label" data-bs-toggle="tooltip" data-bs-placement="right" title="Return on Equity = net income ÷ total equity. Filters to companies with ROE at or above the given value.">Min ROE</div>
+                <div id="sl-roe"></div>
+                <input type="hidden" name="min_roe" id="v-roe" value="0">
+                <div class="slider-value" id="lbl-roe" data-slider="sl-roe" data-handles="1">0</div>
+              </div>
+
+              <div class="slider-wrap">
+                <div class="slider-label" data-bs-toggle="tooltip" data-bs-placement="right" title="Price-to-Earnings ratio. Negative = company losing money. Under 15 is often considered cheap, over 20 expensive.">P/E range</div>
+                <div id="sl-pe"></div>
+                <input type="hidden" name="pe_range_min" id="v-pe-min" value="{{ ranges.pe_min }}">
+                <input type="hidden" name="pe_range_max" id="v-pe-max" value="{{ ranges.pe_max }}">
+                <div class="slider-value" id="lbl-pe" data-slider="sl-pe" data-handles="2">{{ ranges.pe_min }} – {{ ranges.pe_max }}</div>
+              </div>
+
+              <div class="slider-wrap">
+                <div class="slider-label" data-bs-toggle="tooltip" data-bs-placement="right" title="Price-to-Book Value. Lower values generally indicate better cost-to-value ratio.">Max P/BV</div>
+                <div id="sl-pbv"></div>
+                <input type="hidden" name="max_price_per_book_value" id="v-pbv" value="{{ ranges.pbv_max }}">
+                <div class="slider-value" id="lbl-pbv" data-slider="sl-pbv" data-handles="1">{{ ranges.pbv_max }}</div>
+              </div>
+
+              <div class="slider-wrap">
+                <div class="slider-label" data-bs-toggle="tooltip" data-bs-placement="right" title="Debt-to-capital ratio. Investors often prefer under 0.6 (60%), though up to 0.8 can be acceptable for growing companies.">Max Debt/Capital</div>
+                <div id="sl-debt"></div>
+                <input type="hidden" name="max_debt_per_capital_value" id="v-debt" value="{{ ranges.debt_max }}">
+                <div class="slider-value" id="lbl-debt" data-slider="sl-debt" data-handles="1">{{ ranges.debt_max }}</div>
+              </div>
+            </div>
           </div>
 
+          <!-- ── Exclusions ─────────────────────────────── -->
           <div class="mb-2">
-            <label class="slider-label" data-bs-toggle="tooltip" data-bs-placement="right" title="Exclude all stocks from one or more industries.">Exclude industries</label>
-            <select id="sel-industries" name="excluded_industries" multiple placeholder="Select industries…">
-              {% for s in ranges.industries %}<option value="{{ s }}">{{ s }}</option>{% endfor %}
-            </select>
+            <p class="section-header" data-bs-toggle="collapse" data-bs-target="#collapse-exclusions">
+              <span>Exclusions</span>
+              <span class="chevron">&#9660;</span>
+            </p>
+            <div class="collapse show" id="collapse-exclusions">
+
+              <div class="mb-2">
+                <label class="slider-label" data-bs-toggle="tooltip" data-bs-placement="right" title="Exclude specific stocks from your results by ticker symbol.">Exclude symbols</label>
+                <select id="sel-symbols" name="excluded_symbols" multiple placeholder="Select symbols…">
+                  {% for s in ranges.symbols %}<option value="{{ s }}">{{ s }}</option>{% endfor %}
+                </select>
+              </div>
+
+              <div class="mb-2">
+                <label class="slider-label" data-bs-toggle="tooltip" data-bs-placement="right" title="Exclude all stocks from one or more sectors.">Exclude sectors</label>
+                <select id="sel-sectors" name="excluded_sectors" multiple placeholder="Select sectors…">
+                  {% for s in ranges.sectors %}<option value="{{ s }}">{{ s }}</option>{% endfor %}
+                </select>
+              </div>
+
+              <div class="mb-2">
+                <label class="slider-label" data-bs-toggle="tooltip" data-bs-placement="right" title="Exclude all stocks from one or more industries.">Exclude industries</label>
+                <select id="sel-industries" name="excluded_industries" multiple placeholder="Select industries…">
+                  {% for s in ranges.industries %}<option value="{{ s }}">{{ s }}</option>{% endfor %}
+                </select>
+              </div>
+            </div>
           </div>
-        </div>
 
-        <!-- Disclaimer -->
-        <div class="disclaimer">
-          <strong>Disclaimer:</strong> The information provided by Divifilter is for informational purposes only and
-          should not be considered as financial advice. Divifilter is not affiliated with any financial institution
-          or investment company. The accuracy of the data cannot be guaranteed and is subject to change without notice.
-          By using Divifilter you agree to use the information at your own risk.
-        </div>
+          <!-- Disclaimer -->
+          <div class="disclaimer">
+            <strong>Disclaimer:</strong> The information provided by Divifilter is for informational purposes only and
+            should not be considered as financial advice. Divifilter is not affiliated with any financial institution
+            or investment company. The accuracy of the data cannot be guaranteed and is subject to change without notice.
+            By using Divifilter you agree to use the information at your own risk.
+          </div>
 
-      </form>
+        </form>
+      </div>
     </div><!-- /sidebar -->
 
     <!-- Main content -->
     <div class="col-md-9 col-lg-10 p-3" id="main-col">
       <div class="results-card">
         <div class="d-flex align-items-center mb-3 gap-2">
-          <h4 class="mb-0 fw-semibold" style="color:#e6edf3; letter-spacing:-.01em;">Results</h4>
+          <!-- Hamburger (mobile only) -->
+          <button class="btn btn-sm d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarOffcanvas"
+                  style="border:1px solid var(--df-border); color:var(--df-text-muted); padding:4px 8px;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+              <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"/>
+            </svg>
+          </button>
+          <h4 class="mb-0 fw-semibold" style="color:var(--df-text); letter-spacing:-.01em;">Results</h4>
           <span id="spinner" class="spinner-border spinner-border-sm text-primary ms-2" role="status"></span>
+          <!-- Theme toggle -->
+          <button id="theme-toggle" class="theme-toggle ms-auto" type="button" title="Toggle light/dark mode">
+            <svg id="icon-sun" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="display:none;">
+              <path d="M8 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6m0 1a4 4 0 1 0 0-8 4 4 0 0 0 0 8M8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0m0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13m8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5M3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8m10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0m-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0m9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707M3.757 4.464a.5.5 0 0 1-.707 0L1.636 3.05a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707"/>
+            </svg>
+            <svg id="icon-moon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M6 .278a.77.77 0 0 1 .08.858 7.2 7.2 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277q.792-.001 1.533-.16a.79.79 0 0 1 .81.316.73.73 0 0 1-.031.893A8.35 8.35 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.75.75 0 0 1 6 .278"/>
+            </svg>
+          </button>
         </div>
+
+        <!-- Skeleton overlay -->
+        <div id="skeleton" class="skeleton-overlay">
+          <div class="skeleton-bar skeleton-header"></div>
+          <div class="skeleton-bar" style="width:100%"></div>
+          <div class="skeleton-bar" style="width:95%"></div>
+          <div class="skeleton-bar" style="width:100%"></div>
+          <div class="skeleton-bar" style="width:90%"></div>
+          <div class="skeleton-bar" style="width:100%"></div>
+          <div class="skeleton-bar" style="width:97%"></div>
+          <div class="skeleton-bar" style="width:100%"></div>
+          <div class="skeleton-bar" style="width:93%"></div>
+          <div class="skeleton-bar" style="width:100%"></div>
+          <div class="skeleton-bar" style="width:96%"></div>
+        </div>
+
         <div id="results">
-          <p class="small mb-2" style="color:#8b949e;">{{ row_count }} stock(s) found</p>
+          {% if row_count > 0 %}
+          <p class="small mb-2" style="color:var(--df-text-muted);">{{ row_count }} stock(s) found</p>
           <div class="table-responsive">
             {{ table_html | safe }}
           </div>
+          {% else %}
+          <div class="text-center py-5" style="color:var(--df-text-muted);">
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" viewBox="0 0 16 16" class="mb-3" style="opacity:.5;">
+              <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85zm-5.242.656a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11z"/>
+            </svg>
+            <p class="mb-1 fw-semibold">No stocks match your filters</p>
+            <p class="small mb-0">Try widening your criteria to see more results.</p>
+          </div>
+          {% endif %}
         </div>
       </div>
     </div>
@@ -317,6 +469,46 @@
 <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
 <!-- Bootstrap JS (bundle) -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Theme toggle -->
+<script>
+(function () {
+  var theme = localStorage.getItem('df-theme') || 'dark';
+  document.documentElement.setAttribute('data-bs-theme', theme);
+
+  function applyIcons(t) {
+    document.getElementById('icon-sun').style.display = t === 'dark' ? 'none' : 'block';
+    document.getElementById('icon-moon').style.display = t === 'dark' ? 'block' : 'none';
+  }
+  applyIcons(theme);
+
+  document.getElementById('theme-toggle').addEventListener('click', function () {
+    theme = theme === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-bs-theme', theme);
+    localStorage.setItem('df-theme', theme);
+    applyIcons(theme);
+  });
+})();
+</script>
+
+<!-- Skeleton loading -->
+<script>
+(function () {
+  var skel = document.getElementById('skeleton');
+  var results = document.getElementById('results');
+
+  document.body.addEventListener('htmx:beforeRequest', function (e) {
+    if (!e.detail.elt || e.detail.elt.id !== 'filters') return;
+    skel.style.display = 'block';
+    results.classList.add('results-dimmed');
+  });
+  document.body.addEventListener('htmx:afterSettle', function (e) {
+    if (!e.detail.elt || e.detail.elt.id !== 'filters') return;
+    skel.style.display = 'none';
+    results.classList.remove('results-dimmed');
+  });
+})();
+</script>
 
 <script>
 (function () {

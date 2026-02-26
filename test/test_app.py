@@ -159,7 +159,7 @@ class TestApp(unittest.TestCase):
             "max_price_per_book_value": 10.0,
             "max_debt_per_capital_value": 1.0,
         })
-        self.assertIn("0 stock(s) found", response.text)
+        self.assertIn("No stocks match your filters", response.text)
 
     def test_post_filter_excluded_symbols_forwarded(self):
         self.mock_mysql.run_filter_query.reset_mock()

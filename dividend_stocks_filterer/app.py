@@ -86,7 +86,7 @@ async def index(request: Request):
         "ranges": ranges,
         "db_update_dates": db_update_dates,
         "table_html": initial_df.to_html(
-            classes="table table-striped table-hover table-sm table-dark", border=0, index=True
+            classes="table table-striped table-hover table-sm", border=0, index=True
         ),
         "row_count": len(initial_df),
     })
@@ -127,7 +127,7 @@ async def filter_stocks(
     df = radar_dict_to_table(results)
     return templates.TemplateResponse(request, "_table.html", {
         "table_html": df.to_html(
-            classes="table table-striped table-hover table-sm table-dark", border=0, index=True
+            classes="table table-striped table-hover table-sm", border=0, index=True
         ),
         "row_count": len(df),
     })
