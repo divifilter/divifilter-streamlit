@@ -1,4 +1,5 @@
 import pymysql
+from dbutils.pooled_db import PooledDB
 from typing import List
 
 
@@ -18,13 +19,16 @@ class MysqlConnection:
             Returns:
                 None
             """
-        self.conn = pymysql.connect(host=db_host, port=db_port, user=db_user, passwd=db_password, db=db_schema,
-                                    connect_timeout=10, read_timeout=30)
-        self.dict_conn = pymysql.connect(host=db_host, port=db_port, user=db_user, passwd=db_password, db=db_schema,
-                                         cursorclass=pymysql.cursors.DictCursor,
-                                         connect_timeout=10, read_timeout=30)
+        pool_kwargs = dict(
+            creator=pymysql, host=db_host, port=db_port, user=db_user,
+            passwd=db_password, db=db_schema,
+            connect_timeout=10, read_timeout=30,
+            mincached=0, maxcached=2, maxconnections=3, blocking=True, ping=1,
+        )
+        self._pool = PooledDB(**pool_kwargs)
+        self._dict_pool = PooledDB(**pool_kwargs, cursorclass=pymysql.cursors.DictCursor)
 
-    def run_sql_query(self, sql_query:str, tuple_or_dict:str = "tuple") -> list:
+    def run_sql_query(self, sql_query: str, tuple_or_dict: str = "tuple") -> list:
         """
         Executes a SQL query on the database.
 
@@ -36,16 +40,20 @@ class MysqlConnection:
             list: A list of tuples containing the query response.
         """
         if tuple_or_dict == "tuple":
-            self.conn.ping(reconnect=True)
-            cur = self.conn.cursor()
+            pool = self._pool
         elif tuple_or_dict == "dict":
-            self.dict_conn.ping(reconnect=True)
-            cur = self.dict_conn.cursor()
+            pool = self._dict_pool
         else:
             raise ValueError
-        cur.execute(sql_query)
-        query_response = cur.fetchall()
-        return query_response
+        conn = pool.connection()
+        try:
+            cur = conn.cursor()
+            cur.execute(sql_query)
+            query_response = cur.fetchall()
+            cur.close()
+            return query_response
+        finally:
+            conn.close()
 
     def check_db_update_dates(self) -> dict:
         """
