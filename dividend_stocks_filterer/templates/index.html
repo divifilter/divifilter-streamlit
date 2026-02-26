@@ -123,6 +123,32 @@
     #spinner { display: none; }
     .htmx-request #spinner { display: inline-block; }
 
+    /* ── Initial loading spinner ──────────────────────────────────────── */
+    .initial-loader {
+      flex: 1; display: flex; flex-direction: column;
+      justify-content: center; align-items: center; gap: 1rem;
+    }
+    .shimmer-text {
+      font-size: 1rem; font-weight: 600; letter-spacing: 0.05em;
+      color: var(--df-text-muted);
+      background: linear-gradient(
+        90deg,
+        var(--df-text-muted) 0%,
+        var(--df-accent) 40%,
+        var(--df-accent-hover) 60%,
+        var(--df-text-muted) 100%
+      );
+      background-size: 200% 100%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: shimmer 2s ease-in-out infinite;
+    }
+    @keyframes shimmer {
+      0%   { background-position: 100% 0; }
+      100% { background-position: -100% 0; }
+    }
+
     /* ── Results card ──────────────────────────────────────────────────── */
     .results-card { background: var(--df-surface); border: 1px solid var(--df-surface-2); border-radius: 8px; padding: 1rem; flex: 1; display: flex; flex-direction: column; min-height: 0; position: relative; }
     #results { flex: 1; display: flex; flex-direction: column; min-height: 0; }
@@ -438,10 +464,11 @@
         </div>
 
         <div id="results">
-          <div class="d-flex justify-content-center align-items-center py-5">
-            <div class="spinner-border text-primary" role="status">
+          <div class="initial-loader">
+            <div class="spinner-border text-primary" style="width:3rem;height:3rem;" role="status">
               <span class="visually-hidden">Loading...</span>
             </div>
+            <div class="shimmer-text">Loading...</div>
           </div>
         </div>
       </div>

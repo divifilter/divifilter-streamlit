@@ -256,6 +256,109 @@ class TestApp(unittest.TestCase):
         args = self.mock_mysql.run_filter_query.call_args
         self.assertIn("Banking", args[0][18])
 
+    # ── Structural / Layout ──────────────────────────────────────────────
+
+    def test_index_contains_sidebar(self):
+        response = self.client.get("/")
+        self.assertIn('id="sidebarOffcanvas"', response.text)
+
+    def test_index_contains_results_div(self):
+        response = self.client.get("/")
+        self.assertIn('id="results"', response.text)
+
+    def test_index_contains_main_col(self):
+        response = self.client.get("/")
+        self.assertIn('id="main-col"', response.text)
+
+    # ── HTMX attributes ───────────────────────────────────────────────
+
+    def test_index_form_has_htmx_target(self):
+        response = self.client.get("/")
+        self.assertIn('hx-target="#results"', response.text)
+
+    def test_index_form_has_htmx_trigger(self):
+        response = self.client.get("/")
+        self.assertIn('hx-trigger=', response.text)
+        self.assertIn('load', response.text)
+
+    def test_index_form_has_htmx_swap(self):
+        response = self.client.get("/")
+        self.assertIn('hx-swap="innerHTML"', response.text)
+
+    # ── Loading spinners ──────────────────────────────────────────────
+
+    def test_index_contains_inline_spinner(self):
+        response = self.client.get("/")
+        self.assertIn('id="spinner"', response.text)
+
+    def test_index_contains_initial_loading_spinner(self):
+        response = self.client.get("/")
+        self.assertIn('class="initial-loader"', response.text)
+        self.assertIn('spinner-border text-primary', response.text)
+        self.assertIn('class="shimmer-text"', response.text)
+
+    # ── Filter sections (collapsible) ─────────────────────────────────
+
+    def test_index_contains_dividend_section(self):
+        response = self.client.get("/")
+        self.assertIn('id="collapse-dividend"', response.text)
+
+    def test_index_contains_financial_section(self):
+        response = self.client.get("/")
+        self.assertIn('id="collapse-financial"', response.text)
+
+    def test_index_contains_exclusions_section(self):
+        response = self.client.get("/")
+        self.assertIn('id="collapse-exclusions"', response.text)
+
+    def test_index_contains_presets_section(self):
+        response = self.client.get("/")
+        self.assertIn('id="collapse-presets"', response.text)
+
+    # ── Sliders ───────────────────────────────────────────────────────
+
+    def test_index_contains_all_sliders(self):
+        response = self.client.get("/")
+        slider_ids = [
+            'sl-streak', 'sl-yield', 'sl-dgr', 'sl-chowder',
+            'sl-price', 'sl-fv', 'sl-revenue', 'sl-npm',
+            'sl-cf', 'sl-roe', 'sl-pe', 'sl-pbv', 'sl-debt',
+        ]
+        for sid in slider_ids:
+            with self.subTest(slider=sid):
+                self.assertIn(f'id="{sid}"', response.text)
+
+    # ── Multiselects ──────────────────────────────────────────────────
+
+    def test_index_contains_exclusion_selects(self):
+        response = self.client.get("/")
+        for sel_id in ['sel-symbols', 'sel-sectors', 'sel-industries']:
+            with self.subTest(select=sel_id):
+                self.assertIn(f'id="{sel_id}"', response.text)
+
+    def test_index_exclusion_selects_have_options(self):
+        response = self.client.get("/")
+        self.assertIn('<option value="AAPL">AAPL</option>', response.text)
+        self.assertIn('<option value="MSFT">MSFT</option>', response.text)
+
+    # ── Theme toggle ──────────────────────────────────────────────────
+
+    def test_index_contains_theme_toggle(self):
+        response = self.client.get("/")
+        self.assertIn('id="theme-toggle"', response.text)
+        self.assertIn('id="icon-moon"', response.text)
+
+    # ── Slider range values from DB ───────────────────────────────────
+
+    def test_index_slider_ranges_use_db_values(self):
+        response = self.client.get("/")
+        # price_max comes from mock: 500.0
+        self.assertIn('500.0', response.text)
+        # pe_min comes from mock: max(-50.0, -50.0) = -50.0
+        self.assertIn('-50.0', response.text)
+        # pe_max comes from mock: min(100.0, 100.0) = 100.0
+        self.assertIn('100.0', response.text)
+
     def test_post_filter_row_count_in_response(self):
         self.mocks['helper_functions'].radar_dict_to_table.return_value = pandas.DataFrame(
             {"Symbol": ["AAPL", "MSFT"], "Price": [150.0, 300.0]}
