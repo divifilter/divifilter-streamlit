@@ -243,6 +243,37 @@
               hx-swap="innerHTML"
               hx-indicator="#spinner">
 
+          <!-- ── Presets ─────────────────────────────────────────────────────────── -->
+          <div class="mb-3">
+            <p class="section-header" data-bs-toggle="collapse" data-bs-target="#collapse-presets">
+              <span>Presets</span>
+              <span class="chevron">&#9660;</span>
+            </p>
+            <div class="collapse show" id="collapse-presets">
+              <div class="d-flex gap-1 mb-2">
+                <input type="text" id="preset-name" placeholder="Preset name…"
+                       autocomplete="off"
+                       style="flex:1; background:var(--df-input-bg); color:var(--df-text);
+                              border:1px solid var(--df-border); border-radius:4px;
+                              font-size:0.75rem; padding:3px 6px; outline:none;">
+                <button type="button" id="btn-save-preset"
+                        class="btn btn-sm btn-primary" style="font-size:0.72rem; padding:2px 8px;">Save</button>
+              </div>
+              <div class="d-flex gap-1">
+                <select id="preset-select"
+                        style="flex:1; background:var(--df-input-bg); color:var(--df-text);
+                               border:1px solid var(--df-border); border-radius:4px;
+                               font-size:0.75rem; padding:3px 6px;">
+                  <option value="">— select preset —</option>
+                </select>
+                <button type="button" id="btn-load-preset"
+                        class="btn btn-sm btn-outline-primary" style="font-size:0.72rem; padding:2px 8px;">Load</button>
+                <button type="button" id="btn-delete-preset"
+                        class="btn btn-sm btn-outline-danger" style="font-size:0.72rem; padding:2px 8px;">Del</button>
+              </div>
+            </div>
+          </div>
+
           <!-- ── Dividend ────────────────────────────────── -->
           <div class="mb-2">
             <p class="section-header" data-bs-toggle="collapse" data-bs-target="#collapse-dividend">
@@ -826,6 +857,102 @@
   // Re-init after every HTMX swap
   document.body.addEventListener('htmx:afterSettle', function () {
     initTable(document.querySelector('#results table'));
+  });
+})();
+
+// ── Filter presets ─────────────────────────────────────────────────────────
+(function () {
+  var STORAGE_KEY = 'df-presets';
+
+  var SINGLE_SLIDERS = [
+    'sl-streak','sl-dgr','sl-chowder','sl-fv',
+    'sl-revenue','sl-npm','sl-cf','sl-roe','sl-pbv','sl-debt'
+  ];
+  var DUAL_SLIDERS = [
+    { id: 'sl-yield',  lo: 'v-yield-min',  hi: 'v-yield-max' },
+    { id: 'sl-price',  lo: 'v-price-min',  hi: 'v-price-max' },
+    { id: 'sl-pe',     lo: 'v-pe-min',     hi: 'v-pe-max'    }
+  ];
+  var TOM_IDS = ['sel-symbols', 'sel-sectors', 'sel-industries'];
+
+  function loadPresets() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); }
+    catch (e) { return {}; }
+  }
+  function savePresets(p) { localStorage.setItem(STORAGE_KEY, JSON.stringify(p)); }
+
+  function capture() {
+    var s = {};
+    SINGLE_SLIDERS.forEach(function (sid) {
+      var inp = sid.replace('sl-', 'v-');
+      s[inp] = parseFloat(document.getElementById(inp).value);
+    });
+    DUAL_SLIDERS.forEach(function (d) {
+      s[d.lo] = parseFloat(document.getElementById(d.lo).value);
+      s[d.hi] = parseFloat(document.getElementById(d.hi).value);
+    });
+    TOM_IDS.forEach(function (id) {
+      var ts = document.getElementById(id).tomselect;
+      s[id] = ts ? ts.getValue() : [];
+    });
+    return s;
+  }
+
+  function apply(state) {
+    SINGLE_SLIDERS.forEach(function (sid) {
+      var inp = sid.replace('sl-', 'v-');
+      if (!(inp in state)) return;
+      document.getElementById(sid).noUiSlider.set(state[inp]);
+    });
+    DUAL_SLIDERS.forEach(function (d) {
+      if (!(d.lo in state)) return;
+      document.getElementById(d.id).noUiSlider.set([state[d.lo], state[d.hi]]);
+    });
+    TOM_IDS.forEach(function (id) {
+      if (!(id in state)) return;
+      var ts = document.getElementById(id).tomselect;
+      if (ts) { ts.clear(true); ts.setValue(state[id]); }
+    });
+    document.getElementById('filters').dispatchEvent(new Event('change', { bubbles: true }));
+  }
+
+  function renderSelect(presets, active) {
+    var sel = document.getElementById('preset-select');
+    sel.innerHTML = '<option value="">— select preset —</option>';
+    Object.keys(presets).sort().forEach(function (name) {
+      var opt = document.createElement('option');
+      opt.value = name; opt.textContent = name;
+      if (name === active) opt.selected = true;
+      sel.appendChild(opt);
+    });
+  }
+
+  renderSelect(loadPresets());
+
+  document.getElementById('btn-save-preset').addEventListener('click', function () {
+    var name = document.getElementById('preset-name').value.trim();
+    if (!name) return;
+    var p = loadPresets();
+    p[name] = capture();
+    savePresets(p);
+    renderSelect(p, name);
+    document.getElementById('preset-name').value = '';
+  });
+
+  document.getElementById('btn-load-preset').addEventListener('click', function () {
+    var name = document.getElementById('preset-select').value;
+    if (!name) return;
+    var p = loadPresets();
+    if (p[name]) apply(p[name]);
+  });
+
+  document.getElementById('btn-delete-preset').addEventListener('click', function () {
+    var name = document.getElementById('preset-select').value;
+    if (!name) return;
+    var p = loadPresets();
+    delete p[name];
+    savePresets(p);
+    renderSelect(p);
   });
 })();
 </script>
