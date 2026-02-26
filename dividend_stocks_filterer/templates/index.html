@@ -191,25 +191,6 @@
     }
     .ts-control input { color: var(--df-text); }
 
-    /* ── Skeleton loading ──────────────────────────────────────────────── */
-    .skeleton-overlay {
-      display: none;
-      position: absolute; top: 3.5rem; left: 1rem; right: 1rem; bottom: 1rem;
-      z-index: 10;
-      padding: 0.5rem;
-    }
-    .skeleton-bar {
-      height: 1.2rem;
-      border-radius: 4px;
-      margin-bottom: 0.6rem;
-      background: linear-gradient(90deg, var(--df-surface-2) 25%, var(--df-border) 50%, var(--df-surface-2) 75%);
-      background-size: 200% 100%;
-      animation: shimmer 1.5s infinite;
-    }
-    .skeleton-header { height: 1.6rem; width: 60%; margin-bottom: 1rem; }
-    @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
-    .results-dimmed { opacity: 0.3; pointer-events: none; }
-
     /* ── Theme toggle button ───────────────────────────────────────────── */
     .theme-toggle {
       background: none; border: 1px solid var(--df-border); border-radius: 6px;
@@ -456,21 +437,6 @@
           </button>
         </div>
 
-        <!-- Skeleton overlay -->
-        <div id="skeleton" class="skeleton-overlay">
-          <div class="skeleton-bar skeleton-header"></div>
-          <div class="skeleton-bar" style="width:100%"></div>
-          <div class="skeleton-bar" style="width:95%"></div>
-          <div class="skeleton-bar" style="width:100%"></div>
-          <div class="skeleton-bar" style="width:90%"></div>
-          <div class="skeleton-bar" style="width:100%"></div>
-          <div class="skeleton-bar" style="width:97%"></div>
-          <div class="skeleton-bar" style="width:100%"></div>
-          <div class="skeleton-bar" style="width:93%"></div>
-          <div class="skeleton-bar" style="width:100%"></div>
-          <div class="skeleton-bar" style="width:96%"></div>
-        </div>
-
         <div id="results"></div>
       </div>
     </div>
@@ -504,25 +470,6 @@
     document.documentElement.setAttribute('data-bs-theme', theme);
     localStorage.setItem('df-theme', theme);
     applyIcons(theme);
-  });
-})();
-</script>
-
-<!-- Skeleton loading -->
-<script>
-(function () {
-  var skel = document.getElementById('skeleton');
-  var results = document.getElementById('results');
-
-  document.body.addEventListener('htmx:beforeRequest', function (e) {
-    if (!e.detail.elt || e.detail.elt.id !== 'filters') return;
-    skel.style.display = 'block';
-    results.classList.add('results-dimmed');
-  });
-  document.body.addEventListener('htmx:afterSettle', function (e) {
-    if (!e.detail.elt || e.detail.elt.id !== 'filters') return;
-    skel.style.display = 'none';
-    results.classList.remove('results-dimmed');
   });
 })();
 </script>
