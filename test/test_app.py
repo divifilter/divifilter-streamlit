@@ -16,6 +16,22 @@ class TestApp(unittest.TestCase):
             "yahoo_finance": "2024-01-02"
         }
         mock_mysql.min_max_value_of_any_stock_key.return_value = 10.0
+        mock_mysql.min_max_all_values.return_value = {
+            'yield_max_raw': 10.0, '5y_yield_max': 10.0,
+            'dgr1y_min': 0.0, 'dgr1y_max': 10.0,
+            'dgr3y_min': 0.0, 'dgr3y_max': 10.0,
+            'dgr5y_min': 0.0, 'dgr5y_max': 10.0,
+            'dgr10y_min': 0.0, 'dgr10y_max': 10.0,
+            'chowder_max_raw': 10.0, 'price_max_raw': 500.0,
+            'fv_min_raw': -10.0, 'fv_max_raw': 10.0,
+            'revenue_min': 0.0, 'revenue_max': 10.0,
+            'npm_min': 0.0, 'npm_max': 10.0,
+            'cf_min': 0.0, 'cf_max': 10.0,
+            'roe_min': 0.0, 'roe_max': 10.0,
+            'pe_min_raw': -50.0, 'pe_max_raw': 100.0,
+            'pbv_min': 0.0, 'pbv_max': 10.0,
+            'debt_max_raw': 1.0,
+        }
         mock_mysql.list_values_of_key_in_db.return_value = ["AAPL", "MSFT"]
         mock_mysql.run_filter_query.return_value = {}
         self.mock_mysql = mock_mysql
