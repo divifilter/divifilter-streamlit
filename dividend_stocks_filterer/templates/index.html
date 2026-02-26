@@ -224,6 +224,11 @@
       display: flex; align-items: center; transition: color 0.2s, border-color 0.2s;
     }
     .theme-toggle:hover { color: var(--df-accent); border-color: var(--df-accent); }
+    #btn-save-preset:hover { color: var(--df-accent-hover) !important; }
+    #btn-delete-preset:hover { color: #ff7b72 !important; }
+    #collapse-presets .ts-wrapper { flex: 1; }
+    #collapse-presets .ts-control { font-size: 0.75rem; min-height: 0; padding: 3px 6px; }
+    #collapse-presets .ts-dropdown { font-size: 0.75rem; }
   </style>
 </head>
 <body>
@@ -258,26 +263,21 @@
               <span class="chevron">&#9660;</span>
             </p>
             <div class="collapse show" id="collapse-presets">
-              <div class="d-flex gap-1 mb-2">
-                <input type="text" id="preset-name" placeholder="Preset name…"
-                       autocomplete="off"
-                       style="flex:1; background:var(--df-input-bg); color:var(--df-text);
-                              border:1px solid var(--df-border); border-radius:4px;
-                              font-size:0.75rem; padding:3px 6px; outline:none;">
-                <button type="button" id="btn-save-preset"
-                        class="btn btn-sm btn-primary" style="font-size:0.72rem; padding:2px 8px;">Save</button>
-              </div>
-              <div class="d-flex gap-1">
-                <select id="preset-select"
-                        style="flex:1; background:var(--df-input-bg); color:var(--df-text);
-                               border:1px solid var(--df-border); border-radius:4px;
-                               font-size:0.75rem; padding:3px 6px;">
-                  <option value="">— select preset —</option>
-                </select>
-                <button type="button" id="btn-load-preset"
-                        class="btn btn-sm btn-outline-primary" style="font-size:0.72rem; padding:2px 8px;">Load</button>
-                <button type="button" id="btn-delete-preset"
-                        class="btn btn-sm btn-outline-danger" style="font-size:0.72rem; padding:2px 8px;">Del</button>
+              <div class="d-flex gap-1 align-items-center">
+                <select id="preset-select" placeholder="Preset name…"></select>
+                <button type="button" id="btn-save-preset" title="Save preset"
+                        style="background:none; border:none; cursor:pointer; padding:2px; color:var(--df-accent); display:flex;">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4.414A1 1 0 0 0 14.707 4L12 1.293A1 1 0 0 0 11.293 1H2zm0 1h1v3a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V2.293L14 5.414V14H13v-4a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v4H2V2zm3 0v3h5V2H5zm-1 8v4h8v-4H4z"/>
+                  </svg>
+                </button>
+                <button type="button" id="btn-delete-preset" title="Delete preset"
+                        style="background:none; border:none; cursor:pointer; padding:2px; color:#f85149; display:flex;">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                    <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H5.5l1-1h3l1 1H13.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                  </svg>
+                </button>
               </div>
             </div>
           </div>
@@ -882,43 +882,49 @@
     document.getElementById('filters').dispatchEvent(new Event('change', { bubbles: true }));
   }
 
-  function renderSelect(presets, active) {
-    var sel = document.getElementById('preset-select');
-    sel.innerHTML = '<option value="">— select preset —</option>';
-    Object.keys(presets).sort().forEach(function (name) {
-      var opt = document.createElement('option');
-      opt.value = name; opt.textContent = name;
-      if (name === active) opt.selected = true;
-      sel.appendChild(opt);
-    });
-  }
-
-  renderSelect(loadPresets());
-
-  document.getElementById('btn-save-preset').addEventListener('click', function () {
-    var name = document.getElementById('preset-name').value.trim();
-    if (!name) return;
-    var p = loadPresets();
-    p[name] = capture();
-    savePresets(p);
-    renderSelect(p, name);
-    document.getElementById('preset-name').value = '';
+  var presetTS = new TomSelect('#preset-select', {
+    create: true,
+    maxItems: 1,
+    persist: false,
+    placeholder: 'Preset name\u2026',
+    onChange: function (value) {
+      if (!value) return;
+      var p = loadPresets();
+      if (p[value]) apply(p[value]);
+    }
   });
 
-  document.getElementById('btn-load-preset').addEventListener('click', function () {
-    var name = document.getElementById('preset-select').value;
+  function renderOptions(presets, active) {
+    presetTS.clear(true);
+    presetTS.clearOptions();
+    Object.keys(presets).sort().forEach(function (name) {
+      presetTS.addOption({ value: name, text: name });
+    });
+    presetTS.refreshOptions(false);
+    if (active) presetTS.setValue(active, true);
+  }
+
+  renderOptions(loadPresets());
+
+  document.getElementById('btn-save-preset').addEventListener('click', function () {
+    var name = (presetTS.getValue() || '').trim();
     if (!name) return;
     var p = loadPresets();
-    if (p[name]) apply(p[name]);
+    if (p[name] && !confirm("Overwrite preset '" + name + "'?")) return;
+    p[name] = capture();
+    savePresets(p);
+    renderOptions(p, name);
   });
 
   document.getElementById('btn-delete-preset').addEventListener('click', function () {
-    var name = document.getElementById('preset-select').value;
+    var name = (presetTS.getValue() || '').trim();
     if (!name) return;
     var p = loadPresets();
+    if (!p[name]) return;
+    if (!confirm("Delete preset '" + name + "'?")) return;
     delete p[name];
     savePresets(p);
-    renderSelect(p);
+    renderOptions(p);
   });
 })();
 </script>

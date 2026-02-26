@@ -314,6 +314,11 @@ class TestApp(unittest.TestCase):
     def test_index_contains_presets_section(self):
         response = self.client.get("/")
         self.assertIn('id="collapse-presets"', response.text)
+        self.assertIn('id="preset-select"', response.text)
+        self.assertIn('id="btn-save-preset"', response.text)
+        self.assertIn('id="btn-delete-preset"', response.text)
+        self.assertNotIn('id="preset-name"', response.text)
+        self.assertNotIn('id="btn-load-preset"', response.text)
 
     # ── Sliders ───────────────────────────────────────────────────────
 
