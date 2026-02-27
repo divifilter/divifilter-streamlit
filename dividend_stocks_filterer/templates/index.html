@@ -529,6 +529,28 @@
   </div>
 </div>
 
+<!-- Save Preset Modal -->
+<div class="modal fade" id="savePresetModal" tabindex="-1" aria-labelledby="savePresetModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content settings-modal">
+      <div class="modal-header">
+        <h5 class="modal-title" id="savePresetModalLabel">Save Preset</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <input type="text" class="form-control" id="savePresetNameInput" placeholder="Preset name…"
+               style="background:var(--df-input-bg); border-color:var(--df-border); color:var(--df-text);">
+        <div id="savePresetWarning" class="mt-2" style="display:none; font-size:0.85rem; color:#f0ad4e;">
+        </div>
+      </div>
+      <div class="modal-footer" style="border-top:none;">
+        <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-sm btn-primary" id="savePresetConfirmBtn">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- Confirm Action Modal -->
 <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
@@ -947,16 +969,30 @@
     document.getElementById('filters').dispatchEvent(new Event('change', { bubbles: true }));
   }
 
+  var applyingPreset = false;
+
   var presetTS = new TomSelect('#preset-select', {
-    create: true,
+    create: false,
     maxItems: 1,
     persist: false,
     placeholder: 'Preset name\u2026',
     onChange: function (value) {
       if (!value) return;
       var p = loadPresets();
-      if (p[value]) apply(p[value]);
+      if (p[value]) {
+        applyingPreset = true;
+        apply(p[value]);
+        applyingPreset = false;
+      }
     }
+  });
+
+  // Clear preset selection when any filter changes (unless we're applying a preset)
+  var filtersForm = document.getElementById('filters');
+  ['change', 'input'].forEach(function (evt) {
+    filtersForm.addEventListener(evt, function () {
+      if (!applyingPreset) presetTS.clear(true);
+    });
   });
 
   function renderOptions(presets, active) {
@@ -986,14 +1022,39 @@
     });
   }
 
-  document.getElementById('btn-save-preset').addEventListener('click', async function () {
-    var name = (presetTS.getValue() || '').trim();
+  // Save Preset modal logic
+  var savePresetModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('savePresetModal'));
+  var savePresetNameInput = document.getElementById('savePresetNameInput');
+  var savePresetWarning = document.getElementById('savePresetWarning');
+  var savePresetConfirmBtn = document.getElementById('savePresetConfirmBtn');
+
+  savePresetNameInput.addEventListener('input', function () {
+    var name = savePresetNameInput.value.trim();
+    var p = loadPresets();
+    if (name && p[name]) {
+      savePresetWarning.textContent = "This will overwrite the existing preset '" + name + "'";
+      savePresetWarning.style.display = 'block';
+    } else {
+      savePresetWarning.style.display = 'none';
+    }
+  });
+
+  savePresetConfirmBtn.addEventListener('click', function () {
+    var name = savePresetNameInput.value.trim();
     if (!name) return;
     var p = loadPresets();
-    if (p[name] && !(await showConfirm('Overwrite Preset', "Overwrite preset '" + name + "'?"))) return;
     p[name] = capture();
     savePresets(p);
+    applyingPreset = true;
     renderOptions(p, name);
+    applyingPreset = false;
+    savePresetModal.hide();
+  });
+
+  document.getElementById('btn-save-preset').addEventListener('click', function () {
+    savePresetNameInput.value = '';
+    savePresetWarning.style.display = 'none';
+    savePresetModal.show();
   });
 
   document.getElementById('btn-delete-preset').addEventListener('click', async function () {
