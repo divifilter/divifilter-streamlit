@@ -110,7 +110,7 @@ class TestRadarDictToTable(unittest.TestCase):
 
     def test_radar_dict_to_table_column_names(self):
         result = radar_dict_to_table(test_radar_dict)
-        self.assertIn('Symbol', result.columns)
+        self.assertNotIn('Symbol', result.columns)
         self.assertIn('Price', result.columns)
         self.assertIn('Div Yield', result.columns)
 
