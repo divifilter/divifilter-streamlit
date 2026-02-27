@@ -59,6 +59,10 @@ docker build -t divifilter-ui .
 docker run -p 80:80 -e DB_HOST=... -e DB_PASS=... divifilter-ui
 ```
 
+## Related Projects
+
+- [divifilter-data-updater](https://github.com/divifilter/divifilter-data-updater) — Data scraper that populates the MySQL/MariaDB database this app reads from.
+
 ## Testing
 
 ```bash
@@ -71,3 +75,7 @@ coverage run -m unittest
 flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
 flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
 ```
+
+## License
+
+This project is licensed under the [GNU Lesser General Public License v3.0](LICENSE).
