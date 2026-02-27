@@ -346,12 +346,13 @@ class TestApp(unittest.TestCase):
         self.assertIn('<option value="AAPL">AAPL</option>', response.text)
         self.assertIn('<option value="MSFT">MSFT</option>', response.text)
 
-    # ── Theme toggle ──────────────────────────────────────────────────
+    # ── Settings menu ────────────────────────────────────────────────
 
-    def test_index_contains_theme_toggle(self):
+    def test_index_contains_settings_menu(self):
         response = self.client.get("/")
-        self.assertIn('id="theme-toggle"', response.text)
-        self.assertIn('id="icon-moon"', response.text)
+        self.assertIn('id="settings-toggle"', response.text)
+        self.assertIn('id="darkmode-switch"', response.text)
+        self.assertIn('id="disclaimerModal"', response.text)
 
     # ── Slider range values from DB ───────────────────────────────────
 

@@ -153,12 +153,24 @@
     .results-card { background: var(--df-surface); border: 1px solid var(--df-surface-2); border-radius: 8px; padding: 1rem; flex: 1; display: flex; flex-direction: column; min-height: 0; position: relative; }
     #results { flex: 1; display: flex; flex-direction: column; min-height: 0; }
 
-    /* ── Disclaimer ────────────────────────────────────────────────────── */
-    .disclaimer {
-      background-color: var(--df-surface); border: 1px solid var(--df-surface-2); border-radius: 6px;
-      color: var(--df-text-dimmed); font-size: 0.68rem; padding: 0.5rem 0.6rem; margin-top: 1rem;
-      line-height: 1.5;
+    /* ── Settings dropdown ─────────────────────────────────────────────── */
+    .settings-menu {
+      background: var(--df-surface); border: 1px solid var(--df-border); border-radius: 8px;
+      padding: 0.25rem 0; min-width: 180px;
     }
+    .settings-menu .dropdown-item {
+      color: var(--df-text); font-size: 0.82rem; padding: 0.45rem 0.85rem;
+      display: flex; align-items: center;
+    }
+    .settings-menu .dropdown-item:hover, .settings-menu .dropdown-item:focus {
+      background: var(--df-surface-2); color: var(--df-accent);
+    }
+    .settings-menu .dropdown-divider { border-color: var(--df-border); }
+    .settings-darkmode-row { cursor: default; }
+    .settings-darkmode-row .form-check-input { cursor: pointer; }
+    .settings-modal { background: var(--df-surface); border: 1px solid var(--df-border); color: var(--df-text); }
+    .settings-modal .modal-header { border-bottom: 1px solid var(--df-border); }
+    [data-bs-theme="dark"] .settings-modal .btn-close { filter: invert(1); }
 
     /* ── Table scrollbar ───────────────────────────────────────────────── */
     .table-responsive::-webkit-scrollbar { width: 8px; height: 8px; }
@@ -427,14 +439,6 @@
             </div>
           </div>
 
-          <!-- Disclaimer -->
-          <div class="disclaimer">
-            <strong>Disclaimer:</strong> The information provided by Divifilter is for informational purposes only and
-            should not be considered as financial advice. Divifilter is not affiliated with any financial institution
-            or investment company. The accuracy of the data cannot be guaranteed and is subject to change without notice.
-            By using Divifilter you agree to use the information at your own risk.
-          </div>
-
         </form>
       </div>
     </div><!-- /sidebar -->
@@ -452,15 +456,46 @@
           </button>
           <h4 class="mb-0 fw-semibold" style="color:var(--df-text); letter-spacing:-.01em;">Results</h4>
           <span id="spinner" class="spinner-border spinner-border-sm text-primary ms-2" role="status"></span>
-          <!-- Theme toggle -->
-          <button id="theme-toggle" class="theme-toggle ms-auto" type="button" title="Toggle light/dark mode">
-            <svg id="icon-sun" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="display:none;">
-              <path d="M8 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6m0 1a4 4 0 1 0 0-8 4 4 0 0 0 0 8M8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0m0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13m8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5M3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8m10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0m-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0m9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707M3.757 4.464a.5.5 0 0 1-.707 0L1.636 3.05a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707"/>
-            </svg>
-            <svg id="icon-moon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-              <path d="M6 .278a.77.77 0 0 1 .08.858 7.2 7.2 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277q.792-.001 1.533-.16a.79.79 0 0 1 .81.316.73.73 0 0 1-.031.893A8.35 8.35 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.75.75 0 0 1 6 .278"/>
-            </svg>
-          </button>
+          <!-- Settings gear dropdown -->
+          <div class="dropdown ms-auto">
+            <button id="settings-toggle" class="theme-toggle" type="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false" title="Settings">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492M5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0"/>
+                <path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52zm-2.658.06a1.873 1.873 0 0 1 3.724 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16a1.873 1.873 0 0 1 2.693 2.694l-.16.291a1.873 1.873 0 0 0 1.116 2.693l.318.094a1.873 1.873 0 0 1 0 3.724l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291a1.873 1.873 0 0 1-2.694 2.694l-.291-.16a1.873 1.873 0 0 0-2.693 1.115l-.094.319a1.873 1.873 0 0 1-3.724 0l-.094-.319a1.873 1.873 0 0 0-2.693-1.115l-.291.16a1.873 1.873 0 0 1-2.694-2.694l.16-.291a1.873 1.873 0 0 0-1.115-2.693l-.319-.094a1.873 1.873 0 0 1 0-3.724l.319-.094a1.873 1.873 0 0 0 1.115-2.693l-.16-.291a1.873 1.873 0 0 1 2.694-2.694l.291.16a1.873 1.873 0 0 0 2.693-1.115z"/>
+              </svg>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end settings-menu">
+              <li>
+                <div class="dropdown-item settings-darkmode-row">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16" class="me-2">
+                    <path d="M6 .278a.77.77 0 0 1 .08.858 7.2 7.2 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277q.792-.001 1.533-.16a.79.79 0 0 1 .81.316.73.73 0 0 1-.031.893A8.35 8.35 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.75.75 0 0 1 6 .278"/>
+                  </svg>
+                  <span class="me-auto">Dark mode</span>
+                  <div class="form-check form-switch mb-0">
+                    <input class="form-check-input" type="checkbox" role="switch" id="darkmode-switch">
+                  </div>
+                </div>
+              </li>
+              <li><hr class="dropdown-divider"></li>
+              <li>
+                <a class="dropdown-item" href="https://github.com/orgs/divifilter/repositories" target="_blank" rel="noopener noreferrer">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16" class="me-2">
+                    <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8"/>
+                  </svg>
+                  GitHub
+                </a>
+              </li>
+              <li>
+                <button class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#disclaimerModal">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16" class="me-2">
+                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                    <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
+                  </svg>
+                  Disclaimer
+                </button>
+              </li>
+            </ul>
+          </div>
         </div>
 
         <div id="results">
@@ -474,6 +509,24 @@
       </div>
     </div>
 
+  </div>
+</div>
+
+<!-- Disclaimer Modal -->
+<div class="modal fade" id="disclaimerModal" tabindex="-1" aria-labelledby="disclaimerModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content settings-modal">
+      <div class="modal-header">
+        <h5 class="modal-title" id="disclaimerModalLabel">Disclaimer</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" style="font-size:0.85rem; line-height:1.6; color:var(--df-text-muted);">
+        The information provided by Divifilter is for informational purposes only and
+        should not be considered as financial advice. Divifilter is not affiliated with any financial institution
+        or investment company. The accuracy of the data cannot be guaranteed and is subject to change without notice.
+        By using Divifilter you agree to use the information at your own risk.
+      </div>
+    </div>
   </div>
 </div>
 
@@ -492,17 +545,13 @@
   var theme = localStorage.getItem('df-theme') || 'dark';
   document.documentElement.setAttribute('data-bs-theme', theme);
 
-  function applyIcons(t) {
-    document.getElementById('icon-sun').style.display = t === 'dark' ? 'none' : 'block';
-    document.getElementById('icon-moon').style.display = t === 'dark' ? 'block' : 'none';
-  }
-  applyIcons(theme);
+  var sw = document.getElementById('darkmode-switch');
+  sw.checked = theme === 'dark';
 
-  document.getElementById('theme-toggle').addEventListener('click', function () {
-    theme = theme === 'dark' ? 'light' : 'dark';
+  sw.addEventListener('change', function () {
+    theme = sw.checked ? 'dark' : 'light';
     document.documentElement.setAttribute('data-bs-theme', theme);
     localStorage.setItem('df-theme', theme);
-    applyIcons(theme);
   });
 })();
 </script>
