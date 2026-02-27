@@ -982,7 +982,7 @@
       if (p[value]) {
         applyingPreset = true;
         apply(p[value]);
-        applyingPreset = false;
+        setTimeout(function () { applyingPreset = false; }, 0);
       }
     }
   });
@@ -1047,7 +1047,7 @@
     savePresets(p);
     applyingPreset = true;
     renderOptions(p, name);
-    applyingPreset = false;
+    setTimeout(function () { applyingPreset = false; }, 0);
     savePresetModal.hide();
   });
 
