@@ -89,6 +89,7 @@
     /* ── Labels & values ───────────────────────────────────────────────── */
     .slider-label { font-size: 0.8rem; font-weight: 500; margin-bottom: 4px; color: var(--df-text-muted); }
     .slider-label[data-bs-toggle="tooltip"] { cursor: help; }
+    #results th[data-bs-toggle="tooltip"] { cursor: help; }
     .slider-wrap { margin-bottom: 1.1rem; }
     .slider-value { font-size: 0.72rem; color: var(--df-accent); margin-top: 5px; text-align: right; font-family: monospace; cursor: pointer; }
     .slider-value:hover { color: var(--df-accent-hover); }
@@ -773,7 +774,7 @@
 
   // ── Tooltips ───────────────────────────────────────────────────────────────
   document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(function (el) {
-    new bootstrap.Tooltip(el);
+    new bootstrap.Tooltip(el, { delay: { show: 350, hide: 0 } });
   });
 })();
 
@@ -902,14 +903,53 @@
     }
   });
 
+  var columnTooltips = {
+    'No Years': 'Consecutive years the stock has paid dividends. 5+ = Challenger, 10+ = Contender, 25+ = Aristocrat.',
+    'Div Yield': 'Annual dividend as a percentage of the current stock price.',
+    '5Y Avg Yield': 'Average dividend yield over the past 5 years.',
+    'DGR 1Y': 'Dividend Growth Rate over the past 1 year.',
+    'DGR 3Y': 'Dividend Growth Rate over the past 3 years.',
+    'DGR 5Y': 'Dividend Growth Rate over the past 5 years.',
+    'DGR 10Y': 'Dividend Growth Rate over the past 10 years.',
+    'Chowder Number': 'Dividend yield + dividend growth rate. 12+ is generally considered strong.',
+    'Price': 'Current stock price in USD.',
+    'FV %': 'Fair Value estimate. 0% = fair, >0% = overvalued, <0% = undervalued.',
+    'Revenue 1Y': 'Revenue growth over the past year.',
+    'NPM': 'Net Profit Margin — earnings after taxes ÷ net revenue.',
+    'CF/Share': 'Cash Flow per Share — (after-tax earnings + depreciation) ÷ shares outstanding.',
+    'ROE': 'Return on Equity — net income ÷ total equity.',
+    'P/E': 'Price-to-Earnings ratio. Under 15 is often cheap, over 20 expensive.',
+    'P/BV': 'Price-to-Book Value. Lower values indicate better cost-to-value ratio.',
+    'Debt/Capital': 'Debt-to-capital ratio. Under 0.6 is generally preferred.',
+    'Sector': "The stock's market sector.",
+    'Industry': "The stock's specific industry within its sector."
+  };
+
+  function initColumnTooltips() {
+    var ths = document.querySelectorAll('#results table thead th');
+    ths.forEach(function (th) {
+      var iconEl = th.querySelector('.sort-icon');
+      var text = iconEl ? th.textContent.replace(iconEl.textContent, '').trim() : th.textContent.trim();
+      var tip = columnTooltips[text];
+      if (tip) {
+        th.setAttribute('data-bs-toggle', 'tooltip');
+        th.setAttribute('data-bs-placement', 'bottom');
+        th.setAttribute('title', tip);
+        new bootstrap.Tooltip(th, { delay: { show: 350, hide: 0 } });
+      }
+    });
+  }
+
   // Init on page load (initial table)
   document.addEventListener('DOMContentLoaded', function () {
     initTable(document.querySelector('#results table'));
+    initColumnTooltips();
   });
 
   // Re-init after every HTMX swap
   document.body.addEventListener('htmx:afterSettle', function () {
     initTable(document.querySelector('#results table'));
+    initColumnTooltips();
   });
 })();
 
