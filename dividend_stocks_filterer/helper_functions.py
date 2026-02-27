@@ -10,4 +10,5 @@ def radar_dict_to_table(radar_dict: dict) -> pd.DataFrame:
     :return radar_df: The dict but in table/dataframe form
     """
     radar_df = pd.DataFrame.from_dict(radar_dict, orient='index')
+    radar_df = radar_df.drop(columns=['Symbol'], errors='ignore')
     return radar_df
