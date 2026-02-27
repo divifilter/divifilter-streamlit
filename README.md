@@ -27,7 +27,7 @@ FastAPI, HTMX, Bootstrap 5, noUiSlider, Tom Select, Jinja2, PyMySQL, Pandas
 
 ### Configuration
 
-Environment variables (or config files via `parse_it`):
+Environment variables (or config files via [`parse_it`](https://github.com/naorlivne/parse_it)):
 
 | Variable    | Required | Default     |
 |-------------|----------|-------------|
@@ -45,6 +45,14 @@ uvicorn dividend_stocks_filterer.app:app --host 0.0.0.0 --port 8080 --reload
 ```
 
 ### Docker
+
+Prebuilt multi-arch images (amd64/arm64) are available on [Docker Hub](https://hub.docker.com/r/naorlivne/divifilter-ui):
+
+```bash
+docker run -p 80:80 -e DB_HOST=... -e DB_PASS=... naorlivne/divifilter-ui
+```
+
+Or build locally:
 
 ```bash
 docker build -t divifilter-ui .
