@@ -72,6 +72,7 @@ async def index(request: Request):
     return templates.TemplateResponse(request, "index.html", {
         "ranges": ranges,
         "db_update_dates": db_update_dates,
+        "ga_measurement_id": configuration.get("ga_measurement_id", ""),
     })
 
 

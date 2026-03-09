@@ -29,13 +29,14 @@ FastAPI, HTMX, Bootstrap 5, noUiSlider, Tom Select, Jinja2, PyMySQL, Pandas
 
 Environment variables (or config files via [`parse_it`](https://github.com/naorlivne/parse_it)):
 
-| Variable    | Required | Default     |
-|-------------|----------|-------------|
-| `DB_HOST`   | Yes      | —           |
-| `DB_PASS`   | Yes      | —           |
-| `DB_PORT`   | No       | `3306`      |
-| `DB_USER`   | No       | `root`      |
-| `DB_SCHEMA` | No       | `defaultdb` |
+| Variable            | Required | Default     | Description                          |
+|---------------------|----------|-------------|--------------------------------------|
+| `DB_HOST`           | Yes      | —           | MySQL/MariaDB host                   |
+| `DB_PASS`           | Yes      | —           | Database password                    |
+| `DB_PORT`           | No       | `3306`      | Database port                        |
+| `DB_USER`           | No       | `root`      | Database user                        |
+| `DB_SCHEMA`         | No       | `defaultdb` | Database schema                      |
+| `GA_MEASUREMENT_ID` | No       | —           | Google Analytics 4 measurement ID    |
 
 ### Run locally
 

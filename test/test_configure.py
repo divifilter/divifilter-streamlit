@@ -46,3 +46,19 @@ class TestReadConfigurations(unittest.TestCase):
                 del os.environ["DB_PASS"]
             else:
                 os.environ["DB_PASS"] = original
+
+    def test_ga_measurement_id_defaults_to_empty(self):
+        config = read_configurations()
+        self.assertFalse(config["ga_measurement_id"])
+
+    def test_ga_measurement_id_env_var_override(self):
+        original = os.environ.get("GA_MEASUREMENT_ID")
+        try:
+            os.environ["GA_MEASUREMENT_ID"] = "G-TESTID123"
+            config = read_configurations(config_folder="tests/test_configs/missing_key")
+            self.assertEqual(config["ga_measurement_id"], "G-TESTID123")
+        finally:
+            if original is None:
+                del os.environ["GA_MEASUREMENT_ID"]
+            else:
+                os.environ["GA_MEASUREMENT_ID"] = original

@@ -21,4 +21,5 @@ def read_configurations(config_folder: str = "config") -> dict:
     config["db_user"] = parser.read_configuration_variable("db_user", default_value="root")
     config["db_pass"] = parser.read_configuration_variable("db_pass")
     config["db_schema"] = parser.read_configuration_variable("db_schema", default_value="defaultdb")
+    config["ga_measurement_id"] = parser.read_configuration_variable("ga_measurement_id", default_value="")
     return config

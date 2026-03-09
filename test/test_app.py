@@ -39,7 +39,7 @@ class TestApp(unittest.TestCase):
         mock_configure = types.ModuleType('configure')
         mock_configure.read_configurations = MagicMock(return_value={
             "db_host": "h", "db_port": 3306, "db_user": "u",
-            "db_pass": "p", "db_schema": "s"
+            "db_pass": "p", "db_schema": "s", "ga_measurement_id": ""
         })
         mock_db_mod = types.ModuleType('db_functions')
         mock_db_mod.MysqlConnection = MagicMock(return_value=mock_mysql)
@@ -353,6 +353,19 @@ class TestApp(unittest.TestCase):
         self.assertIn('id="settings-toggle"', response.text)
         self.assertIn('id="darkmode-switch"', response.text)
         self.assertIn('id="disclaimerModal"', response.text)
+
+    # ── Google Analytics ─────────────────────────────────────────────
+
+    def test_index_no_ga_when_id_empty(self):
+        response = self.client.get("/")
+        self.assertNotIn("googletagmanager.com/gtag/js", response.text)
+
+    def test_index_ga_script_when_id_set(self):
+        self.app_module.configuration["ga_measurement_id"] = "G-TESTID123"
+        response = self.client.get("/")
+        self.assertIn("googletagmanager.com/gtag/js?id=G-TESTID123", response.text)
+        self.assertIn("gtag('config', 'G-TESTID123')", response.text)
+        self.app_module.configuration["ga_measurement_id"] = ""
 
     # ── Slider range values from DB ───────────────────────────────────
 
