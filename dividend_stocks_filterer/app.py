@@ -50,6 +50,7 @@ ranges = {
     "pbv_min": _raw['pbv_min'],
     "pbv_max": _raw['pbv_max'],
     "debt_max": _raw['debt_max_raw'],
+    "payout_max": _raw['payout_ratio_max_raw'],
     # Exclusion options
     "symbols": db.list_values_of_key_in_db("Symbol"),
     "sectors": db.list_values_of_key_in_db("Sector"),
@@ -95,6 +96,7 @@ async def filter_stocks(
     pe_range_max: float = Form(100.0),
     max_price_per_book_value: float = Form(10.0),
     max_debt_per_capital_value: float = Form(1.0),
+    max_payout_ratio: float = Form(1.0),
     excluded_symbols: List[str] = Form(default=[]),
     excluded_sectors: List[str] = Form(default=[]),
     excluded_industries: List[str] = Form(default=[]),
@@ -105,8 +107,8 @@ async def filter_stocks(
         min_dgr, chowder_number, price_range_min, price_range_max,
         fair_value, min_revenue, min_npm, min_cf_per_share, min_roe,
         pe_range_min, pe_range_max, max_price_per_book_value,
-        max_debt_per_capital_value, excluded_symbols, excluded_sectors,
-        excluded_industries
+        max_debt_per_capital_value, max_payout_ratio,
+        excluded_symbols, excluded_sectors, excluded_industries
     )
     df = radar_dict_to_table(results)
     return templates.TemplateResponse(request, "_table.html", {

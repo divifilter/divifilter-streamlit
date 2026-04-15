@@ -111,7 +111,8 @@ class MysqlConnection:
                 MIN(`ROE`), MAX(`ROE`),
                 MIN(`P/E`), MAX(`P/E`),
                 MIN(`P/BV`), MAX(`P/BV`),
-                MAX(`Debt/Capital`)
+                MAX(`Debt/Capital`),
+                MAX(`Payout Ratio`)
             FROM dividend_data_table
             WHERE `Div Yield` IS NOT NULL;
         """
@@ -129,6 +130,7 @@ class MysqlConnection:
             'pe_min_raw', 'pe_max_raw',
             'pbv_min', 'pbv_max',
             'debt_max_raw',
+            'payout_ratio_max_raw',
         ]
         return dict(zip(keys, row))
 
@@ -157,7 +159,8 @@ class MysqlConnection:
                          min_dgr: float, chowder_number: float, price_range_min: float, price_range_max: float,
                          fair_value: float, min_revenue: float, min_npm: float, min_cf_per_share: float,
                          min_roe: float, pe_range_min: float, pe_range_max: float, max_price_per_book_value: float,
-                         max_debt_per_capital_value: float, excluded_symbols: List[str], excluded_sectors: List[str],
+                         max_debt_per_capital_value: float, max_payout_ratio: float,
+                         excluded_symbols: List[str], excluded_sectors: List[str],
                          excluded_industries: List[str]) -> dict:
         """
         Run a filter query on the database to fetch records based on specified criteria.
@@ -179,6 +182,7 @@ class MysqlConnection:
             pe_range_max (float): Maximum Price to Earnings (P/E) ratio range.
             max_price_per_book_value (float): Maximum Price to Book (P/BV) value.
             max_debt_per_capital_value (float): Maximum Debt to Capital value.
+            max_payout_ratio (float): Maximum Payout Ratio (dividends per share / earnings per share).
             excluded_symbols (List[str]): List of symbols to be excluded.
             excluded_sectors (List[str]): List of sectors to be excluded.
             excluded_industries (List[str]): List of industries to be excluded.
@@ -207,10 +211,12 @@ class MysqlConnection:
                 AND (`P/E` BETWEEN {} AND {} OR `P/E` IS NULL)
                 AND (`P/BV` <= {} OR `P/BV` IS NULL)
                 AND (`Debt/Capital` <= {} OR `Debt/Capital` IS NULL)
+                AND (`Payout Ratio` <= {} OR `Payout Ratio` IS NULL)
         """.format(min_streak_years, yield_range_min, yield_range_max, yield_range_min, yield_range_max,
                    min_dgr, min_dgr, min_dgr, min_dgr, chowder_number, price_range_min, price_range_max,
                    fair_value, min_revenue, min_npm, min_cf_per_share, min_roe,
-                   pe_range_min, pe_range_max, max_price_per_book_value, max_debt_per_capital_value)
+                   pe_range_min, pe_range_max, max_price_per_book_value, max_debt_per_capital_value,
+                   max_payout_ratio)
 
         # Add NOT IN clauses only if the exclusion lists are not empty
         if excluded_symbols:

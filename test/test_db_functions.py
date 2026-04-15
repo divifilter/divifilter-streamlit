@@ -108,6 +108,7 @@ class TestMysqlConnection(unittest.TestCase):
             fair_value=25, min_revenue=0.0, min_npm=0.0,
             min_cf_per_share=0.0, min_roe=0.0, pe_range_min=0.0, pe_range_max=50.0,
             max_price_per_book_value=100.0, max_debt_per_capital_value=1.0,
+            max_payout_ratio=1.0,
             excluded_symbols=[], excluded_sectors=[], excluded_industries=[]
         )
 
@@ -128,6 +129,7 @@ class TestMysqlConnection(unittest.TestCase):
             fair_value=25, min_revenue=0.0, min_npm=0.0,
             min_cf_per_share=0.0, min_roe=0.0, pe_range_min=0.0, pe_range_max=50.0,
             max_price_per_book_value=100.0, max_debt_per_capital_value=1.0,
+            max_payout_ratio=1.0,
             excluded_symbols=["AAPL"], excluded_sectors=["Technology"],
             excluded_industries=["Software"]
         )
@@ -218,6 +220,7 @@ class TestMysqlConnection(unittest.TestCase):
             fair_value=25, min_revenue=0.0, min_npm=0.0,
             min_cf_per_share=0.0, min_roe=0.0, pe_range_min=0.0, pe_range_max=50.0,
             max_price_per_book_value=100.0, max_debt_per_capital_value=1.0,
+            max_payout_ratio=1.0,
             excluded_symbols=[], excluded_sectors=[], excluded_industries=[]
         )
 
@@ -232,6 +235,7 @@ class TestMysqlConnection(unittest.TestCase):
             fair_value=25, min_revenue=0.0, min_npm=0.0,
             min_cf_per_share=0.0, min_roe=0.0, pe_range_min=0.0, pe_range_max=50.0,
             max_price_per_book_value=100.0, max_debt_per_capital_value=1.0,
+            max_payout_ratio=1.0,
             excluded_symbols=["AAPL"], excluded_sectors=[], excluded_industries=[]
         )
 
@@ -249,6 +253,7 @@ class TestMysqlConnection(unittest.TestCase):
             fair_value=25, min_revenue=0.0, min_npm=0.0,
             min_cf_per_share=0.0, min_roe=0.0, pe_range_min=0.0, pe_range_max=50.0,
             max_price_per_book_value=100.0, max_debt_per_capital_value=1.0,
+            max_payout_ratio=1.0,
             excluded_symbols=[], excluded_sectors=["Energy"], excluded_industries=[]
         )
 
@@ -266,6 +271,7 @@ class TestMysqlConnection(unittest.TestCase):
             fair_value=25, min_revenue=0.0, min_npm=0.0,
             min_cf_per_share=0.0, min_roe=0.0, pe_range_min=0.0, pe_range_max=50.0,
             max_price_per_book_value=100.0, max_debt_per_capital_value=1.0,
+            max_payout_ratio=1.0,
             excluded_symbols=[], excluded_sectors=[], excluded_industries=["Banking"]
         )
 
@@ -283,6 +289,7 @@ class TestMysqlConnection(unittest.TestCase):
             fair_value=15, min_revenue=3.0, min_npm=5.0,
             min_cf_per_share=1.5, min_roe=10.0, pe_range_min=5.0, pe_range_max=30.0,
             max_price_per_book_value=50.0, max_debt_per_capital_value=0.8,
+            max_payout_ratio=0.6,
             excluded_symbols=[], excluded_sectors=[], excluded_industries=[]
         )
 
@@ -290,7 +297,7 @@ class TestMysqlConnection(unittest.TestCase):
         for col in ["`No Years`", "`Div Yield`", "`5Y Avg Yield`", "`DGR 1Y`", "`DGR 3Y`",
                     "`DGR 5Y`", "`DGR 10Y`", "`Chowder Number`", "`Price`", "`FV %`",
                     "`Revenue 1Y`", "`NPM`", "`CF/Share`", "`ROE`", "`P/E`", "`P/BV`",
-                    "`Debt/Capital`"]:
+                    "`Debt/Capital`", "`Payout Ratio`"]:
             self.assertIn(col, executed_query)
         # Verify specific filter values appear in query
         self.assertIn("5", executed_query)   # min_streak_years
@@ -306,6 +313,7 @@ class TestMysqlConnection(unittest.TestCase):
             fair_value=25, min_revenue=0.0, min_npm=0.0,
             min_cf_per_share=0.0, min_roe=0.0, pe_range_min=0.0, pe_range_max=50.0,
             max_price_per_book_value=100.0, max_debt_per_capital_value=1.0,
+            max_payout_ratio=1.0,
             excluded_symbols=[], excluded_sectors=[], excluded_industries=[]
         )
 
@@ -321,6 +329,7 @@ class TestMysqlConnection(unittest.TestCase):
             fair_value=25, min_revenue=0.0, min_npm=0.0,
             min_cf_per_share=0.0, min_roe=0.0, pe_range_min=0.0, pe_range_max=50.0,
             max_price_per_book_value=100.0, max_debt_per_capital_value=1.0,
+            max_payout_ratio=1.0,
             excluded_symbols=["AAPL", "MSFT", "GOOG"], excluded_sectors=[],
             excluded_industries=[]
         )

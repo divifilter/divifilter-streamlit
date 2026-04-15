@@ -415,6 +415,13 @@
                 <input type="hidden" name="max_debt_per_capital_value" id="v-debt" value="{{ ranges.debt_max }}">
                 <div class="slider-value" id="lbl-debt" data-slider="sl-debt" data-handles="1">{{ ranges.debt_max }}</div>
               </div>
+
+              <div class="slider-wrap">
+                <div class="slider-label" data-bs-toggle="tooltip" data-bs-placement="right" title="Payout Ratio — dividends per share ÷ earnings per share. Lower values indicate more sustainable dividends (under 0.6 is generally preferred).">Max payout ratio</div>
+                <div id="sl-payout"></div>
+                <input type="hidden" name="max_payout_ratio" id="v-payout" value="{{ ranges.payout_max }}">
+                <div class="slider-value" id="lbl-payout" data-slider="sl-payout" data-handles="1">{{ "%.2f"|format(ranges.payout_max) }}</div>
+              </div>
             </div>
           </div>
 
@@ -675,7 +682,8 @@
     pe_max:         {{ ranges.pe_max }},
     pbv_min:        {{ ranges.pbv_min }},
     pbv_max:        {{ ranges.pbv_max }},
-    debt_max:       {{ ranges.debt_max }}
+    debt_max:       {{ ranges.debt_max }},
+    payout_max:     {{ ranges.payout_max }}
   };
 
   function pct(v) { return v.toFixed(1) + '%'; }
@@ -698,6 +706,7 @@
   dual(  'sl-pe',      'v-pe-min', 'v-pe-max',    'lbl-pe',  r.pe_min, r.pe_max, r.pe_min, r.pe_max, 0.5, plain2);
   single('sl-pbv',     'v-pbv',     'lbl-pbv',     r.pbv_min, r.pbv_max, r.pbv_max, 0.1, plain);
   single('sl-debt',    'v-debt',    'lbl-debt',    0, r.debt_max, r.debt_max, 0.01, plain);
+  single('sl-payout',  'v-payout',  'lbl-payout',  0, r.payout_max, r.payout_max, 0.01, plain);
 
   // ── Click-to-type on slider value labels ──────────────────────────────────
   document.querySelectorAll('.slider-value[data-slider]').forEach(function(lbl) {
@@ -930,6 +939,7 @@
     'P/E': 'Price-to-Earnings ratio. Under 15 is often cheap, over 20 expensive.',
     'P/BV': 'Price-to-Book Value. Lower values indicate better cost-to-value ratio.',
     'Debt/Capital': 'Debt-to-capital ratio. Under 0.6 is generally preferred.',
+    'Payout Ratio': 'Payout Ratio — annual dividends per share ÷ earnings per share. Lower values indicate more sustainable dividends.',
     'Sector': "The stock's market sector.",
     'Industry': "The stock's specific industry within its sector.",
     'Company': "The company's full legal name.",
@@ -987,7 +997,7 @@
 
   var SINGLE_SLIDERS = [
     'sl-streak','sl-dgr','sl-chowder','sl-fv',
-    'sl-revenue','sl-npm','sl-cf','sl-roe','sl-pbv','sl-debt'
+    'sl-revenue','sl-npm','sl-cf','sl-roe','sl-pbv','sl-debt','sl-payout'
   ];
   var DUAL_SLIDERS = [
     { id: 'sl-yield',  lo: 'v-yield-min',  hi: 'v-yield-max' },

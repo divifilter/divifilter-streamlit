@@ -31,6 +31,7 @@ class TestApp(unittest.TestCase):
             'pe_min_raw': -50.0, 'pe_max_raw': 100.0,
             'pbv_min': 0.0, 'pbv_max': 10.0,
             'debt_max_raw': 1.0,
+            'payout_ratio_max_raw': 1.0,
         }
         mock_mysql.list_values_of_key_in_db.return_value = ["AAPL", "MSFT"]
         mock_mysql.run_filter_query.return_value = {}
@@ -105,6 +106,7 @@ class TestApp(unittest.TestCase):
             "pe_range_max": 100.0,
             "max_price_per_book_value": 10.0,
             "max_debt_per_capital_value": 1.0,
+            "max_payout_ratio": 1.0,
         })
         self.assertEqual(response.status_code, 200)
 
@@ -127,6 +129,7 @@ class TestApp(unittest.TestCase):
             "pe_range_max": 30.0,
             "max_price_per_book_value": 3.0,
             "max_debt_per_capital_value": 0.6,
+            "max_payout_ratio": 0.8,
         })
         self.mock_mysql.run_filter_query.assert_called_once()
 
@@ -151,6 +154,7 @@ class TestApp(unittest.TestCase):
             "pe_range_max": 100.0,
             "max_price_per_book_value": 10.0,
             "max_debt_per_capital_value": 1.0,
+            "max_payout_ratio": 1.0,
         })
         self.assertIn("<table", response.text)
 
@@ -174,8 +178,33 @@ class TestApp(unittest.TestCase):
             "pe_range_max": 100.0,
             "max_price_per_book_value": 10.0,
             "max_debt_per_capital_value": 1.0,
+            "max_payout_ratio": 1.0,
         })
         self.assertIn("No stocks match your filters", response.text)
+
+    def test_post_filter_max_payout_ratio_forwarded(self):
+        self.mock_mysql.run_filter_query.reset_mock()
+        self.client.post("/filter", data={
+            "min_streak_years": 5,
+            "yield_range_min": 0.0,
+            "yield_range_max": 10.0,
+            "min_dgr": 0.0,
+            "chowder_number": 0,
+            "price_range_min": 1.0,
+            "price_range_max": 500.0,
+            "fair_value": 0,
+            "min_revenue": 0.0,
+            "min_npm": 0.0,
+            "min_cf_per_share": 0.0,
+            "min_roe": 0.0,
+            "pe_range_min": -50.0,
+            "pe_range_max": 100.0,
+            "max_price_per_book_value": 10.0,
+            "max_debt_per_capital_value": 1.0,
+            "max_payout_ratio": 0.55,
+        })
+        args = self.mock_mysql.run_filter_query.call_args
+        self.assertEqual(args[0][16], 0.55)
 
     def test_post_filter_excluded_symbols_forwarded(self):
         self.mock_mysql.run_filter_query.reset_mock()
@@ -196,11 +225,12 @@ class TestApp(unittest.TestCase):
             "pe_range_max": 100.0,
             "max_price_per_book_value": 10.0,
             "max_debt_per_capital_value": 1.0,
+            "max_payout_ratio": 1.0,
             "excluded_symbols": ["AAPL", "MSFT"],
         })
         args = self.mock_mysql.run_filter_query.call_args
-        self.assertIn("AAPL", args[0][16])
-        self.assertIn("MSFT", args[0][16])
+        self.assertIn("AAPL", args[0][17])
+        self.assertIn("MSFT", args[0][17])
 
     def test_health_returns_503_on_db_error(self):
         self.mock_mysql.run_sql_query.side_effect = Exception("db down")
@@ -227,10 +257,11 @@ class TestApp(unittest.TestCase):
             "pe_range_max": 100.0,
             "max_price_per_book_value": 10.0,
             "max_debt_per_capital_value": 1.0,
+            "max_payout_ratio": 1.0,
             "excluded_sectors": ["Technology"],
         })
         args = self.mock_mysql.run_filter_query.call_args
-        self.assertIn("Technology", args[0][17])
+        self.assertIn("Technology", args[0][18])
 
     def test_post_filter_excluded_industries_forwarded(self):
         self.mock_mysql.run_filter_query.reset_mock()
@@ -251,10 +282,11 @@ class TestApp(unittest.TestCase):
             "pe_range_max": 100.0,
             "max_price_per_book_value": 10.0,
             "max_debt_per_capital_value": 1.0,
+            "max_payout_ratio": 1.0,
             "excluded_industries": ["Banking"],
         })
         args = self.mock_mysql.run_filter_query.call_args
-        self.assertIn("Banking", args[0][18])
+        self.assertIn("Banking", args[0][19])
 
     # ── Structural / Layout ──────────────────────────────────────────────
 
@@ -327,7 +359,7 @@ class TestApp(unittest.TestCase):
         slider_ids = [
             'sl-streak', 'sl-yield', 'sl-dgr', 'sl-chowder',
             'sl-price', 'sl-fv', 'sl-revenue', 'sl-npm',
-            'sl-cf', 'sl-roe', 'sl-pe', 'sl-pbv', 'sl-debt',
+            'sl-cf', 'sl-roe', 'sl-pe', 'sl-pbv', 'sl-debt', 'sl-payout',
         ]
         for sid in slider_ids:
             with self.subTest(slider=sid):
@@ -399,5 +431,6 @@ class TestApp(unittest.TestCase):
             "pe_range_max": 100.0,
             "max_price_per_book_value": 10.0,
             "max_debt_per_capital_value": 1.0,
+            "max_payout_ratio": 1.0,
         })
         self.assertIn("2 stock(s) found", response.text)
