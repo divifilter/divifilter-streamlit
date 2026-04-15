@@ -31,7 +31,7 @@ class TestApp(unittest.TestCase):
             'pe_min_raw': -50.0, 'pe_max_raw': 100.0,
             'pbv_min': 0.0, 'pbv_max': 10.0,
             'debt_max_raw': 1.0,
-            'payout_ratio_max_raw': 1.0,
+            'payout_ratio_max_raw': 100.0,
         }
         mock_mysql.list_values_of_key_in_db.return_value = ["AAPL", "MSFT"]
         mock_mysql.run_filter_query.return_value = {}
@@ -106,7 +106,7 @@ class TestApp(unittest.TestCase):
             "pe_range_max": 100.0,
             "max_price_per_book_value": 10.0,
             "max_debt_per_capital_value": 1.0,
-            "max_payout_ratio": 1.0,
+            "max_payout_ratio": 100.0,
         })
         self.assertEqual(response.status_code, 200)
 
@@ -129,7 +129,7 @@ class TestApp(unittest.TestCase):
             "pe_range_max": 30.0,
             "max_price_per_book_value": 3.0,
             "max_debt_per_capital_value": 0.6,
-            "max_payout_ratio": 0.8,
+            "max_payout_ratio": 80.0,
         })
         self.mock_mysql.run_filter_query.assert_called_once()
 
@@ -154,7 +154,7 @@ class TestApp(unittest.TestCase):
             "pe_range_max": 100.0,
             "max_price_per_book_value": 10.0,
             "max_debt_per_capital_value": 1.0,
-            "max_payout_ratio": 1.0,
+            "max_payout_ratio": 100.0,
         })
         self.assertIn("<table", response.text)
 
@@ -178,7 +178,7 @@ class TestApp(unittest.TestCase):
             "pe_range_max": 100.0,
             "max_price_per_book_value": 10.0,
             "max_debt_per_capital_value": 1.0,
-            "max_payout_ratio": 1.0,
+            "max_payout_ratio": 100.0,
         })
         self.assertIn("No stocks match your filters", response.text)
 
@@ -201,10 +201,10 @@ class TestApp(unittest.TestCase):
             "pe_range_max": 100.0,
             "max_price_per_book_value": 10.0,
             "max_debt_per_capital_value": 1.0,
-            "max_payout_ratio": 0.55,
+            "max_payout_ratio": 55.0,
         })
         args = self.mock_mysql.run_filter_query.call_args
-        self.assertEqual(args[0][16], 0.55)
+        self.assertEqual(args[0][16], 55.0)
 
     def test_post_filter_excluded_symbols_forwarded(self):
         self.mock_mysql.run_filter_query.reset_mock()
@@ -225,7 +225,7 @@ class TestApp(unittest.TestCase):
             "pe_range_max": 100.0,
             "max_price_per_book_value": 10.0,
             "max_debt_per_capital_value": 1.0,
-            "max_payout_ratio": 1.0,
+            "max_payout_ratio": 100.0,
             "excluded_symbols": ["AAPL", "MSFT"],
         })
         args = self.mock_mysql.run_filter_query.call_args
@@ -257,7 +257,7 @@ class TestApp(unittest.TestCase):
             "pe_range_max": 100.0,
             "max_price_per_book_value": 10.0,
             "max_debt_per_capital_value": 1.0,
-            "max_payout_ratio": 1.0,
+            "max_payout_ratio": 100.0,
             "excluded_sectors": ["Technology"],
         })
         args = self.mock_mysql.run_filter_query.call_args
@@ -282,7 +282,7 @@ class TestApp(unittest.TestCase):
             "pe_range_max": 100.0,
             "max_price_per_book_value": 10.0,
             "max_debt_per_capital_value": 1.0,
-            "max_payout_ratio": 1.0,
+            "max_payout_ratio": 100.0,
             "excluded_industries": ["Banking"],
         })
         args = self.mock_mysql.run_filter_query.call_args
@@ -431,6 +431,6 @@ class TestApp(unittest.TestCase):
             "pe_range_max": 100.0,
             "max_price_per_book_value": 10.0,
             "max_debt_per_capital_value": 1.0,
-            "max_payout_ratio": 1.0,
+            "max_payout_ratio": 100.0,
         })
         self.assertIn("2 stock(s) found", response.text)

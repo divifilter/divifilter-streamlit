@@ -108,7 +108,7 @@ class TestMysqlConnection(unittest.TestCase):
             fair_value=25, min_revenue=0.0, min_npm=0.0,
             min_cf_per_share=0.0, min_roe=0.0, pe_range_min=0.0, pe_range_max=50.0,
             max_price_per_book_value=100.0, max_debt_per_capital_value=1.0,
-            max_payout_ratio=1.0,
+            max_payout_ratio=100.0,
             excluded_symbols=[], excluded_sectors=[], excluded_industries=[]
         )
 
@@ -129,7 +129,7 @@ class TestMysqlConnection(unittest.TestCase):
             fair_value=25, min_revenue=0.0, min_npm=0.0,
             min_cf_per_share=0.0, min_roe=0.0, pe_range_min=0.0, pe_range_max=50.0,
             max_price_per_book_value=100.0, max_debt_per_capital_value=1.0,
-            max_payout_ratio=1.0,
+            max_payout_ratio=100.0,
             excluded_symbols=["AAPL"], excluded_sectors=["Technology"],
             excluded_industries=["Software"]
         )
@@ -220,7 +220,7 @@ class TestMysqlConnection(unittest.TestCase):
             fair_value=25, min_revenue=0.0, min_npm=0.0,
             min_cf_per_share=0.0, min_roe=0.0, pe_range_min=0.0, pe_range_max=50.0,
             max_price_per_book_value=100.0, max_debt_per_capital_value=1.0,
-            max_payout_ratio=1.0,
+            max_payout_ratio=100.0,
             excluded_symbols=[], excluded_sectors=[], excluded_industries=[]
         )
 
@@ -235,7 +235,7 @@ class TestMysqlConnection(unittest.TestCase):
             fair_value=25, min_revenue=0.0, min_npm=0.0,
             min_cf_per_share=0.0, min_roe=0.0, pe_range_min=0.0, pe_range_max=50.0,
             max_price_per_book_value=100.0, max_debt_per_capital_value=1.0,
-            max_payout_ratio=1.0,
+            max_payout_ratio=100.0,
             excluded_symbols=["AAPL"], excluded_sectors=[], excluded_industries=[]
         )
 
@@ -253,7 +253,7 @@ class TestMysqlConnection(unittest.TestCase):
             fair_value=25, min_revenue=0.0, min_npm=0.0,
             min_cf_per_share=0.0, min_roe=0.0, pe_range_min=0.0, pe_range_max=50.0,
             max_price_per_book_value=100.0, max_debt_per_capital_value=1.0,
-            max_payout_ratio=1.0,
+            max_payout_ratio=100.0,
             excluded_symbols=[], excluded_sectors=["Energy"], excluded_industries=[]
         )
 
@@ -271,7 +271,7 @@ class TestMysqlConnection(unittest.TestCase):
             fair_value=25, min_revenue=0.0, min_npm=0.0,
             min_cf_per_share=0.0, min_roe=0.0, pe_range_min=0.0, pe_range_max=50.0,
             max_price_per_book_value=100.0, max_debt_per_capital_value=1.0,
-            max_payout_ratio=1.0,
+            max_payout_ratio=100.0,
             excluded_symbols=[], excluded_sectors=[], excluded_industries=["Banking"]
         )
 
@@ -289,7 +289,7 @@ class TestMysqlConnection(unittest.TestCase):
             fair_value=15, min_revenue=3.0, min_npm=5.0,
             min_cf_per_share=1.5, min_roe=10.0, pe_range_min=5.0, pe_range_max=30.0,
             max_price_per_book_value=50.0, max_debt_per_capital_value=0.8,
-            max_payout_ratio=0.6,
+            max_payout_ratio=60.0,
             excluded_symbols=[], excluded_sectors=[], excluded_industries=[]
         )
 
@@ -313,7 +313,7 @@ class TestMysqlConnection(unittest.TestCase):
             fair_value=25, min_revenue=0.0, min_npm=0.0,
             min_cf_per_share=0.0, min_roe=0.0, pe_range_min=0.0, pe_range_max=50.0,
             max_price_per_book_value=100.0, max_debt_per_capital_value=1.0,
-            max_payout_ratio=1.0,
+            max_payout_ratio=100.0,
             excluded_symbols=[], excluded_sectors=[], excluded_industries=[]
         )
 
@@ -329,7 +329,7 @@ class TestMysqlConnection(unittest.TestCase):
             fair_value=25, min_revenue=0.0, min_npm=0.0,
             min_cf_per_share=0.0, min_roe=0.0, pe_range_min=0.0, pe_range_max=50.0,
             max_price_per_book_value=100.0, max_debt_per_capital_value=1.0,
-            max_payout_ratio=1.0,
+            max_payout_ratio=100.0,
             excluded_symbols=["AAPL", "MSFT", "GOOG"], excluded_sectors=[],
             excluded_industries=[]
         )
