@@ -50,7 +50,7 @@ ranges = {
     "pbv_min": _raw['pbv_min'],
     "pbv_max": _raw['pbv_max'],
     "debt_max": _raw['debt_max_raw'],
-    "payout_max": _raw['payout_ratio_max_raw'],
+    "payout_max": _raw['payout_ratio_max_raw'] if _raw['payout_ratio_max_raw'] is not None else 1.0,
     # Exclusion options
     "symbols": db.list_values_of_key_in_db("Symbol"),
     "sectors": db.list_values_of_key_in_db("Sector"),
